@@ -956,12 +956,17 @@ ${text}
       alert('لا يوجد تسجيل صوتي محفوظ حالياً.');
       return;
     }
-    preview.currentTime = start;
+    // إضافة هامش نصف ثانية قبل الكلمة ونصف ثانية بعدها لوضوح المخارج
+    const paddedStart = Math.max(0, start - 0.5);
+    const paddedEnd = end + 0.5;
+    
+    preview.currentTime = paddedStart;
     preview.play();
-    const duration = (end - start) * 1000;
+    
+    const duration = (paddedEnd - paddedStart) * 1000;
     setTimeout(() => {
       preview.pause();
-    }, duration > 200 ? duration : 1000);
+    }, duration);
   }
 
   function showCorrectTooltip(clean, originalText, cwData) {
