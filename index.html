@@ -290,7 +290,7 @@
 
 <script>
   let currentRawText = "";
-  let mediaRecorder, audioChunks = [], isRecording = false;
+  let mediaRecorder, mediaStream = null, audioChunks = [], isRecording = false;
   let showSyllables = false, pacerInterval = null;
   let audioBlob = null;
   let availableVoices = [];
@@ -529,13 +529,13 @@
     return new Blob([out.buffer], { type: 'audio/wav' });
   }
 
-  // بدء وإيقاف التسجيل وحفظ الملف بالصيغة المحددة
+  // بدء وإيقاف التسجيل وحفظ الملف بالصيغة المحددة مع إغلاق المايك نهائياً
   async function toggleRecord() {
     const btn = document.getElementById('recordBtn');
     if (!isRecording) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+        mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(mediaStream);
         audioChunks = [];
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
         
@@ -553,6 +553,7 @@
               const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
               finalBlob = audioBufferToWav(decodedBuffer);
               filename = `reading_${Date.now()}.wav`;
+              if (audioCtx.state !== 'closed') audioCtx.close();
             } catch (err) {
               console.warn('WAV conversion fallback to webm:', err);
               finalBlob = rawBlob;
@@ -588,6 +589,13 @@
       }
     } else {
       mediaRecorder.stop();
+
+      // إيقاف مسارات المايك فوراً لتحرير الجوال من وضع المكالمة
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+
       isRecording = false;
       btn.classList.remove('recording');
       btn.innerHTML = '🔴 بدء التسجيل';
