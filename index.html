@@ -80,6 +80,13 @@
     .hl-end { text-decoration: underline; text-decoration-color: #f87171; text-underline-offset: 4px; font-weight: 600; }
     .hl-complex { color: #60a5fa; font-weight: 600; }
     .pause-mark { display: inline-block; margin: 0 5px; color: #4a4a54; font-weight: bold; }
+    .p-c0 { color: #93c5fd; }
+    .p-c1 { color: #86efac; }
+    .p-c2 { color: #fde047; }
+    .p-c3 { color: #d8b4fe; }
+    .p-c4 { color: #67e8f9; }
+    .bionic-lead { font-weight: 800; color: #fff; }
+    .chunk-block { display: inline-block; padding: 2px 6px; margin: 2px 3px; background: rgba(255,255,255,0.04); border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); }
 
     .word-correct { color: var(--success); font-weight: 600; cursor: pointer; }
     .word-error-end { background: rgba(239, 68, 68, 0.25); border-bottom: 2px solid var(--danger); color: #fca5a5; cursor: pointer; border-radius: 3px; padding: 1px 3px; }
@@ -187,6 +194,17 @@
         
         <div class="btn-row">
           <button class="btn-primary" onclick="loadText()">تجهيز النص</button>
+          <div style="display: inline-flex; align-items: center; gap: 4px; background: #24242a; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+            <label style="font-size: 0.75rem; color: var(--muted);">نمط التجهيز:</label>
+            <select id="textPrepMode" onchange="renderText()" style="padding: 2px 4px; font-size: 0.75rem;">
+              <option value="balanced">🌟 افتراضي متوازن</option>
+              <option value="all">👑 الكل (الوضع الشامل)</option>
+              <option value="paragraphs">🎨 تلوين الفِقَر والجمل</option>
+              <option value="traps">🎯 تركيز الكلمات الطويلة والفخاخ</option>
+              <option value="chunking">🫁 نمط التدفق ومواضع التنفس</option>
+              <option value="bionic">⚡ القراءة الموجهة (Bionic)</option>
+            </select>
+          </div>
           <button id="recordBtn" class="btn-record" onclick="toggleRecord()">🔴 بدء التسجيل</button>
           
           <!-- اختيار صيغة حفظ التسجيل -->
@@ -198,7 +216,16 @@
             </select>
           </div>
 
-          <button class="btn-secondary" onclick="copyPrompt()">📋 نسخ البرومبت الصارم</button>
+          <div style="display: inline-flex; align-items: center; gap: 4px; background: #24242a; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+            <label style="font-size: 0.75rem; color: var(--muted);">التدقيق:</label>
+            <select id="strictnessSelect" style="padding: 2px 4px; font-size: 0.75rem;">
+              <option value="friendly">🌱 هادئ ومحفّز (تشجيع ومرونة)</option>
+              <option value="balanced" selected>⚖️ متوازن (عملي وواقعي)</option>
+              <option value="strict">🔥 صارم وشديد (احترافي ودقيق)</option>
+            </select>
+          </div>
+
+          <button class="btn-secondary" onclick="copyPrompt()">📋 نسخ البرومبت</button>
         </div>
 
         <div id="playerBox" class="player-card">
@@ -211,9 +238,20 @@
       </div>
 
       <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
           <h2 style="margin: 0;">شاشة القراءة</h2>
-          <div style="display: flex; gap: 6px;">
+          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+            <button class="btn-secondary btn-sm" onclick="adjustFontSize(1)" title="تكبير الخط">A+</button>
+            <button class="btn-secondary btn-sm" onclick="adjustFontSize(-1)" title="تصغير الخط">A-</button>
+            <div style="display: inline-flex; align-items: center; gap: 4px; background: #24242a; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border);">
+              <label style="font-size: 0.75rem; color: var(--muted);">الإحماء:</label>
+              <select id="warmupModeSelect" style="padding: 2px 4px; font-size: 0.75rem;">
+                <option value="word" selected>🔤 كلمة بكلمة</option>
+                <option value="sentence">📑 جملة بجملة</option>
+                <option value="none">🚫 معطّل (صامت)</option>
+              </select>
+            </div>
+            <button id="readAllBtn" class="btn-secondary btn-sm" onclick="toggleReadAll()" title="قراءة النص كاملاً">▶️ قراءة الكل</button>
             <div id="syllableToggle" class="toggle-chip" onclick="toggleSyllables()">تقطيع المقاطع</div>
             <div id="pacerToggle" class="toggle-chip" onclick="togglePacer()">الموجه (Pacer)</div>
           </div>
@@ -286,12 +324,119 @@
     </div>
 
   </div>
+
+  <!-- شريط التوقيع -->
+  <footer style="text-align: center; padding: 12px 0 6px; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.5px;">
+    Built with <span style="color: #f59e0b;">⚡</span> By: <span style="color: #60a5fa; font-weight: 700;">Naif</span>
+  </footer>
 </div>
 
 <script>
   let currentRawText = "";
   let mediaRecorder, mediaStream = null, audioChunks = [], isRecording = false;
   let showSyllables = false, pacerInterval = null;
+  let isReadingAll = false;
+
+  function handleWordClick(el, clean) {
+    const wordIdx = parseInt(el?.getAttribute('data-widx') || '0', 10);
+    const mode = document.getElementById('warmupModeSelect')?.value || 'word';
+    if (mode === 'none') return;
+
+    if (mode === 'word') {
+      playConfiguredAudio(clean);
+    } else if (mode === 'sentence') {
+      playSentenceAtWord(wordIdx);
+    }
+  }
+
+  function playSentenceAtWord(wordIdx) {
+    if (!('speechSynthesis' in window) || !currentRawText) return;
+    window.speechSynthesis.cancel();
+
+    const sentences = currentRawText.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [currentRawText];
+    let cumulative = 0;
+    let targetSentence = sentences[0];
+
+    for (let s of sentences) {
+      const count = s.split(/\s+/).filter(Boolean).length;
+      if (wordIdx >= cumulative && wordIdx < cumulative + count) {
+        targetSentence = s;
+        break;
+      }
+      cumulative += count;
+    }
+
+    const utter = new SpeechSynthesisUtterance(targetSentence.trim());
+    const sel = document.getElementById('voiceSelect');
+    if (availableVoices[sel.value]) utter.voice = availableVoices[sel.value];
+    utter.rate = parseFloat(document.getElementById('rateRange').value) || 0.85;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function toggleReadAll() {
+    if (!('speechSynthesis' in window)) return;
+    const btn = document.getElementById('readAllBtn');
+
+    if (isReadingAll) {
+      window.speechSynthesis.cancel();
+      isReadingAll = false;
+      if (btn) btn.innerHTML = '▶️ قراءة الكل';
+      document.querySelectorAll('.pacer-active').forEach(el => el.classList.remove('pacer-active'));
+      return;
+    }
+
+    const textToRead = currentRawText || document.getElementById('rawInput').value.trim();
+    if (!textToRead) {
+      alert('يرجى إدخال النص وتجهيزه أولاً.');
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(textToRead);
+    const sel = document.getElementById('voiceSelect');
+    if (availableVoices[sel.value]) utter.voice = availableVoices[sel.value];
+    utter.rate = parseFloat(document.getElementById('rateRange').value) || 0.85;
+
+    const spans = document.querySelectorAll('#readingArea span[id^="w_"]');
+    utter.onboundary = (e) => {
+      if (e.name === 'word') {
+        const charIdx = e.charIndex;
+        let runningLength = 0;
+        let matchedIdx = -1;
+        const words = textToRead.split(/\s+/).filter(Boolean);
+
+        for (let i = 0; i < words.length; i++) {
+          const wLen = words[i].length;
+          if (charIdx >= runningLength && charIdx <= runningLength + wLen) {
+            matchedIdx = i;
+            break;
+          }
+          runningLength += wLen + 1;
+        }
+
+        if (matchedIdx !== -1 && spans[matchedIdx]) {
+          spans.forEach(s => s.classList.remove('pacer-active'));
+          spans[matchedIdx].classList.add('pacer-active');
+        }
+      }
+    };
+
+    utter.onend = () => {
+      isReadingAll = false;
+      if (btn) btn.innerHTML = '▶️ قراءة الكل';
+      spans.forEach(s => s.classList.remove('pacer-active'));
+    };
+
+    utter.onerror = () => {
+      isReadingAll = false;
+      if (btn) btn.innerHTML = '▶️ قراءة الكل';
+      spans.forEach(s => s.classList.remove('pacer-active'));
+    };
+
+    isReadingAll = true;
+    if (btn) btn.innerHTML = '⏹️ إيقاف القراءة';
+    window.speechSynthesis.speak(utter);
+  }
   let audioBlob = null;
   let availableVoices = [];
 
@@ -417,11 +562,19 @@
     document.getElementById('tooltip').style.display = 'none';
   }
 
+  let currentFontSizeRem = 1.25;
+  function adjustFontSize(dir) {
+    currentFontSizeRem = Math.max(0.9, Math.min(2.0, currentFontSizeRem + (dir * 0.1)));
+    const area = document.getElementById('readingArea');
+    if (area) area.style.fontSize = `${currentFontSizeRem}rem`;
+  }
+
   function renderText() {
     const box = document.getElementById('readingArea');
-    const words = currentRawText.split(/\s+/);
-    
-    let html = words.map((w, idx) => {
+    if (!currentRawText) return;
+    const mode = document.getElementById('textPrepMode')?.value || 'balanced';
+
+    function formatWord(w, wordIdx, colorClass = '') {
       let clean = w.replace(/[^a-zA-Z]/g, '');
       let display = w;
 
@@ -429,18 +582,87 @@
         display = splitSyllables(w);
       }
 
+      if ((mode === 'bionic' || mode === 'all') && clean.length > 1) {
+        const mid = Math.ceil(clean.length / 2);
+        const lead = clean.slice(0, mid);
+        const rest = clean.slice(mid);
+        display = `<strong class="bionic-lead">${lead}</strong>${rest}`;
+      }
+
       const isComplex = clean.length >= 8 || /[bcdfghjklmnpqrstvwxyz]{3,}/i.test(clean);
-      const hasTrickyEnd = /(s|es|ed)$/i.test(clean);
+      const hasTrickyEnd = /(s|es|ed|ths|sts)$/i.test(clean);
 
       let classes = [];
-      if (isComplex) classes.push('hl-complex');
-      if (hasTrickyEnd) classes.push('hl-end');
+      if (colorClass) classes.push(colorClass);
 
-      return `<span id="w_${idx}" class="${classes.join(' ')}" onclick="playConfiguredAudio('${clean}')">${display}</span>`;
+      if (mode === 'traps' || mode === 'balanced' || mode === 'all') {
+        if (isComplex) classes.push('hl-complex');
+        if (hasTrickyEnd) classes.push('hl-end');
+      }
+
+      return `<span id="w_${wordIdx}" data-widx="${wordIdx}" class="${classes.join(' ')}" onclick="handleWordClick(this, '${clean}')">${display}</span>`;
+    }
+
+    if (mode === 'all') {
+      const sentences = currentRawText.split(/(?<=[.?!])\s+/);
+      let wordCounter = 0;
+      let html = sentences.map((sent, sIdx) => {
+        const colorClass = `p-c${sIdx % 5}`;
+        const chunks = sent.split(/([,;:]+)/);
+        let sentHtml = '';
+        for (let i = 0; i < chunks.length; i += 2) {
+          const textChunk = chunks[i]?.trim();
+          const punct = chunks[i + 1] || '';
+          if (!textChunk) continue;
+          const words = textChunk.split(/\s+/).filter(Boolean);
+          const spans = words.map(w => formatWord(w, wordCounter++, colorClass)).join(' ');
+          sentHtml += `<span class="chunk-block">${spans}${punct}</span> `;
+        }
+        return `<span style="display:inline-block; margin-bottom: 6px;">${sentHtml}</span>`;
+      }).join('<span class="pause-mark">||</span><br>');
+      box.innerHTML = html;
+      return;
+    }
+
+    if (mode === 'paragraphs') {
+      const sentences = currentRawText.split(/(?<=[.?!])\s+/);
+      let wordCounter = 0;
+      let html = sentences.map((sent, sIdx) => {
+        const colorClass = `p-c${sIdx % 5}`;
+        const words = sent.split(/\s+/).filter(Boolean);
+        const spans = words.map(w => formatWord(w, wordCounter++, colorClass)).join(' ');
+        return `<span style="display:inline-block; margin-bottom: 8px;">${spans}</span>`;
+      }).join('<span class="pause-mark">||</span><br>');
+      box.innerHTML = html;
+      return;
+    }
+
+    if (mode === 'chunking') {
+      const chunks = currentRawText.split(/([,;:.?!]+)/);
+      let wordCounter = 0;
+      let html = '';
+      for (let i = 0; i < chunks.length; i += 2) {
+        const textChunk = chunks[i]?.trim();
+        const punct = chunks[i + 1] || '';
+        if (!textChunk) continue;
+        const words = textChunk.split(/\s+/).filter(Boolean);
+        const spans = words.map(w => formatWord(w, wordCounter++)).join(' ');
+        html += `<span class="chunk-block">${spans}${punct}</span> `;
+      }
+      box.innerHTML = html;
+      return;
+    }
+
+    const words = currentRawText.split(/\s+/).filter(Boolean);
+    let html = words.map((w, idx) => {
+      let spanHtml = formatWord(w, idx);
+      if (/[,;]$/.test(w)) {
+        spanHtml += ' <span class="pause-mark">|</span>';
+      } else if (/[.?!]$/.test(w)) {
+        spanHtml += ' <span class="pause-mark">||</span><br>';
+      }
+      return spanHtml;
     }).join(' ');
-
-    html = html.replace(/([,;])/g, '$1 <span class="pause-mark">|</span>');
-    html = html.replace(/([.?!])/g, '$1 <span class="pause-mark">||</span><br>');
 
     box.innerHTML = html;
   }
@@ -608,8 +830,22 @@
       alert('يرجى إدخال النص وتجهيزه أولاً.');
       return;
     }
-    const prompt = `استمع للمقطع الصوتي وطابقه مع النص المستهدف لتقييم النطق والأداء الصوتي بموضوعية وبدون مجاملة.
-ركز على إسقاط نهايات الكلمات، عجن المقاطع، تقييم هدوء النبرة، إيقاع القراءة ومواضع التنفس.
+
+    const strictness = document.getElementById('strictnessSelect')?.value || 'balanced';
+    let instructions = '';
+
+    if (strictness === 'friendly') {
+      instructions = `استمع للمقطع الصوتي وطابقه مع النص المستهدف بأسلوب تقييم هادئ، محفّز وإيجابي للغاية.
+ركز على تعزيز الثقة والطلاقة. تغاضَ عن اللكنة العادية والوقفات الطبيعية المألوفة، ولا تحتسب الكلمة خطأ إلا إذا تغير معناها أو حُذفت كلياً. اجعل النتيجة مشجعة ومريحة مع الثناء على الجهد وإبراز الإيجابيات.`;
+    } else if (strictness === 'strict') {
+      instructions = `استمع للمقطع الصوتي وطابقه مع النص المستهدف لتقييم النطق والأداء الصوتي بموضوعية وبدون مجاملة.
+ركز بدقة على إسقاط نهايات الكلمات (مثل s/es/ed/ths)، عجن المقاطع، تقييم هدوء النبرة، إيقاع القراءة وأجزاء الثانية في مواضع التنفس.`;
+    } else {
+      instructions = `استمع للمقطع الصوتي وطابقه مع النص المستهدف بأسلوب تقييم عملي، متوازن وواقعي.
+ركز على الأخطاء اللفظية الواضحة والمؤثرة (مثل إسقاط النهايات وحروف الجمع الصريحة)، مع التعامل بمرونة واقعية مع سرعة الإلقاء والوقفات دون تشديد مفرط أو تساهل، وقدم توجيهات إيجابية بناّءة.`;
+    }
+
+    const prompt = `${instructions}
 ممنوع استخدام أي تعليقات // داخل الكود. أخرج الإجابة فقط ككود JSON صالح بهذا الشكل:
 
 {
@@ -626,7 +862,16 @@
       "heard_as": "how it sounded",
       "type": "ending_dropped",
       "correction": "correct pronunciation",
-      "reason": "سبب الخطأ باختصار"
+      "reason": "سبب الخطأ باختصار",
+      "start_time": 1.5,
+      "end_time": 2.2
+    }
+  ],
+  "correct_words": [
+    {
+      "word": "ExactWord",
+      "start_time": 0.5,
+      "end_time": 1.1
     }
   ]
 }
@@ -673,6 +918,12 @@ ${text}
         if (!sessionWords.includes(c)) sessionWords.push(c);
       });
 
+      const correctMap = new Map();
+      (data.correct_words || []).forEach(cw => {
+        const c = cw.word.toLowerCase().replace(/[^a-z]/g, '');
+        correctMap.set(c, cw);
+      });
+
       spans.forEach(s => {
         const clean = s.textContent.toLowerCase().replace(/[^a-z]/g, '');
         if (errMap.has(clean)) {
@@ -681,7 +932,8 @@ ${text}
           s.onclick = () => showTooltip(err);
         } else if (clean.length > 0) {
           s.className = 'word-correct';
-          s.onclick = () => playConfiguredAudio(clean);
+          const cwData = correctMap.get(clean) || null;
+          s.onclick = () => showCorrectTooltip(clean, s.textContent, cwData);
         }
       });
 
@@ -698,6 +950,48 @@ ${text}
     }
   }
 
+  function playMySnippet(start, end) {
+    const preview = document.getElementById('audioPreview');
+    if (!preview || !preview.src) {
+      alert('لا يوجد تسجيل صوتي محفوظ حالياً.');
+      return;
+    }
+    preview.currentTime = start;
+    preview.play();
+    const duration = (end - start) * 1000;
+    setTimeout(() => {
+      preview.pause();
+    }, duration > 200 ? duration : 1000);
+  }
+
+  function showCorrectTooltip(clean, originalText, cwData) {
+    const tip = document.getElementById('tooltip');
+    tip.style.display = 'block';
+    tip.innerHTML = `
+      <div style="font-weight: bold; color: var(--success); font-size: 0.95rem;">🎉 نطق متقن ومخارج سليمة!</div>
+      <div style="margin-top: 4px; color: #fff;">الكلمة: <span style="direction: ltr; display:inline-block; font-weight: bold;">${originalText}</span></div>
+      
+      <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+        ${(cwData && cwData.start_time !== undefined && cwData.end_time !== undefined) ? `
+          <button style="width: auto; background: var(--success); color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;" onclick="playMySnippet(${cwData.start_time},${cwData.end_time})">🎧 استمع لنطقك المتقن</button>
+        ` : ''}
+        <button style="width: auto; background: var(--accent); padding: 4px 8px; border-radius: 4px;" onclick="speakInstant('${clean}')">⚡ النطق النموذجي (المتصفح)</button>
+      </div>
+
+      <div class="human-audio-box">
+        <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">🎙️ مقارنة مع النطق البشري:</div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="source-btn" onclick="playHumanAudio('${clean}', 1)">🔊 القاموس الحر</button>
+          <button class="source-btn" onclick="playHumanAudio('${clean}', 2)">🔊 ويكيميديا</button>
+          <button class="source-btn" onclick="playHumanAudio('${clean}', 3)">🇺🇸 كامبريدج (أمريكي)</button>
+          <button class="source-btn" onclick="playHumanAudio('${clean}', 4)">🇬🇧 كامبريدج (بريطاني)</button>
+        </div>
+        <div id="humanAudioStatus" style="font-size: 0.75rem; color: var(--info); margin-top: 4px;"></div>
+      </div>
+    `;
+    playConfiguredAudio(clean);
+  }
+
   function showTooltip(err) {
     const tip = document.getElementById('tooltip');
     tip.style.display = 'block';
@@ -708,7 +1002,10 @@ ${text}
       <div><strong>السبب:</strong> ${err.reason}</div>
       
       <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
-        <button style="width: auto; background: var(--accent); padding: 4px 8px; border-radius: 4px;" onclick="speakInstant('${err.word}')">⚡ نطق فوري (المتصفح)</button>
+        ${(err.start_time !== undefined && err.end_time !== undefined) ? `
+          <button style="width: auto; background: #dc2626; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;" onclick="playMySnippet(${err.start_time}, ${err.end_time})">🎧 استمع لنطقك المسجّل</button>
+        ` : ''}
+        <button style="width: auto; background: var(--accent); padding: 4px 8px; border-radius: 4px;" onclick="speakInstant('${err.word}')">⚡ النطق الصحيح (المتصفح)</button>
       </div>
 
       <div class="human-audio-box">
