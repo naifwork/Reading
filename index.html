@@ -957,8 +957,8 @@ ${text}
       return;
     }
     // إضافة هامش نصف ثانية قبل الكلمة ونصف ثانية بعدها لوضوح المخارج
-    const paddedStart = Math.max(0, start - 0.5);
-    const paddedEnd = end + 0.5;
+    const paddedStart = Math.max(0, start - 1.5);
+    const paddedEnd = end + 1.5;
     
     preview.currentTime = paddedStart;
     preview.play();
