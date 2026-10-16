@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Coach Dashboard | لوحة مدرب القراءة</title>
+  <style>
+    :root {
+      --bg: #101012;
+      --card: #18181c;
+      --border: #2a2a32;
+      --text: #e2e2e8;
+      --muted: #9a9aa6;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #06b6d4;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 14px; display: flex; justify-content: center; }
+    .layout-wrapper { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 14px; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 880px) {
+      .dashboard-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+    }
+
+    .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    h1 { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    h2 { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    p.sub { font-size: 0.8rem; color: var(--muted); }
+
+    textarea {
+      width: 100%; height: 90px; background: #0c0c0e; border: 1px solid var(--border);
+      border-radius: 6px; color: #fff; padding: 10px; font-size: 0.9rem; resize: vertical;
+      direction: ltr; text-align: left;
+    }
+    textarea:focus { outline: none; border-color: var(--accent); }
+
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+    button {
+      flex: 1; min-width: 110px; padding: 8px 12px; border-radius: 6px; border: none;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.15s ease;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-record { background: #dc2626; color: #fff; }
+    .btn-record.recording { background: #991b1b; animation: pulse 1.5s infinite; }
+    .btn-secondary { background: #24242a; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #33333b; }
+    .btn-sm { padding: 4px 8px; font-size: 0.75rem; min-width: auto; flex: none; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .player-card {
+      display: none; margin-top: 10px; padding: 10px; border-radius: 8px;
+      background: #131317; border: 1px solid var(--border);
+    }
+
+    .reading-box {
+      direction: ltr; text-align: left; font-size: 1.25rem; line-height: 2;
+      min-height: 140px; padding: 14px; border-radius: 8px; background: #08080a;
+      border: 1px solid var(--border); word-break: break-word;
+    }
+
+    .hl-end { text-decoration: underline; text-decoration-color: #f87171; text-underline-offset: 4px; font-weight: 600; }
+    .hl-complex { color: #60a5fa; font-weight: 600; }
+    .pause-mark { display: inline-block; margin: 0 5px; color: #4a4a54; font-weight: bold; }
+
+    .word-correct { color: var(--success); font-weight: 600; cursor: pointer; }
+    .word-error-end { background: rgba(239, 68, 68, 0.25); border-bottom: 2px solid var(--danger); color: #fca5a5; cursor: pointer; border-radius: 3px; padding: 1px 3px; }
+    .word-error-stumble { background: rgba(245, 158, 11, 0.25); border-bottom: 2px solid var(--warning); color: #fde68a; cursor: pointer; border-radius: 3px; padding: 1px 3px; }
+    .pacer-active { background: rgba(59, 130, 246, 0.35); border-radius: 4px; }
+
+    .behavior-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .metric-card {
+      padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.45;
+      border-right: 4px solid transparent; background: #121216;
+    }
+    .metric-blue { border-right-color: var(--accent); background: rgba(37, 99, 235, 0.08); }
+    .metric-teal { border-right-color: var(--info); background: rgba(6, 182, 212, 0.08); }
+    .metric-yellow { border-right-color: var(--warning); background: rgba(245, 158, 11, 0.08); }
+    .metric-purple { border-right-color: var(--purple); background: rgba(139, 92, 246, 0.08); }
+
+    .metric-card .title { font-weight: 700; color: #fff; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+
+    .score-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 1.1rem;
+      background: #1f1f26; border: 2px solid var(--border);
+    }
+
+    .settings-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.8rem; }
+    select, input[type="range"] {
+      background: #0c0c0e; border: 1px solid var(--border); color: #fff;
+      padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; outline: none;
+    }
+
+    .toggle-chip {
+      background: #24242a; border: 1px solid var(--border); color: var(--muted);
+      padding: 4px 10px; border-radius: 16px; font-size: 0.75rem; cursor: pointer; user-select: none;
+    }
+    .toggle-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .tooltip-card {
+      display: none; background: #121216; border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; margin-top: 10px; font-size: 0.85rem; line-height: 1.5; direction: rtl; text-align: right;
+    }
+
+    .human-audio-box {
+      margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);
+    }
+    .source-btn {
+      padding: 3px 8px; font-size: 0.75rem; border-radius: 4px; background: #1e1e24;
+      border: 1px solid var(--border); color: #60a5fa; cursor: pointer;
+    }
+    .source-btn:hover { background: #2a2a35; }
+
+    .word-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #24242a; border: 1px solid var(--border); padding: 3px 8px;
+      border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+    }
+    .word-badge:hover { border-color: var(--accent); }
+    .word-badge .del-btn {
+      color: var(--muted); font-size: 0.9rem; line-height: 1; border-radius: 50%;
+      padding: 0 2px;
+    }
+    .word-badge .del-btn:hover { color: var(--danger); }
+  </style>
+</head>
+<body>
+
+<div class="layout-wrapper">
+  <!-- رأس الصفحة ومحرك الصوت واختيار نمط النطق العام -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div>
+        <h1>مدرب القراءة التفاعلي</h1>
+        <p class="sub">نطق فوري وبشري متعدد المصادر، تسجيل بصيغتي WebM و WAV، وتتبع سلوكي متكامل.</p>
+      </div>
+
+      <div class="settings-row">
+        <!-- نمط النطق العام للكلمات -->
+        <label>نمط النطق:</label>
+        <select id="audioModeSelect" onchange="handleAudioModeChange()">
+          <option value="tts">⚡ نطق المتصفح (فوري ولحظي)</option>
+          <option value="human_free">🎙️ بشري: القاموس الحر (FreeDict)</option>
+          <option value="human_wiki">🎙️ بشري: ويكيميديا (Wikimedia)</option>
+          <option value="human_cambridge_us">🎙️ بشري: كامبريدج (أمريكي)</option>
+          <option value="human_cambridge_uk">🎙️ بشري: كامبريدج (بريطاني)</option>
+        </select>
+
+        <span id="voiceWrapper" style="display: inline-flex; align-items: center; gap: 4px;">
+          <label>الصوت:</label>
+          <select id="voiceSelect"></select>
+        </span>
+
+        <label>السرعة:</label>
+        <input type="range" id="rateRange" min="0.5" max="1.2" step="0.1" value="0.85" style="width: 70px;">
+        <span id="rateVal" style="color: var(--muted);">0.85x</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    
+    <!-- العمود الأول: القراءة والتسجيل -->
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      
+      <div class="card">
+        <textarea id="rawInput" placeholder="Paste English text here... (ألصق النص الإنجليزي هنا)"></textarea>
+        
+        <div class="btn-row">
+          <button class="btn-primary" onclick="loadText()">تجهيز النص</button>
+          <button id="recordBtn" class="btn-record" onclick="toggleRecord()">🔴 بدء التسجيل</button>
+          
+          <!-- اختيار صيغة حفظ التسجيل -->
+          <div style="display: inline-flex; align-items: center; gap: 4px; background: #24242a; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+            <label style="font-size: 0.75rem; color: var(--muted);">صيغة الحفظ:</label>
+            <select id="audioFormatSelect" style="padding: 2px 4px; font-size: 0.75rem;">
+              <option value="webm">WebM (سريع وخفيف)</option>
+              <option value="wav">WAV (متوافق مع كل المشغلات)</option>
+            </select>
+          </div>
+
+          <button class="btn-secondary" onclick="copyPrompt()">📋 نسخ البرومبت الصارم</button>
+        </div>
+
+        <div id="playerBox" class="player-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: #fff;">🎧 استمع لتسجيلك:</span>
+            <span id="downloadStatusNotice" style="font-size: 0.75rem; color: var(--success);">تم التنزيل تلقائياً (اسحبه من شريط المتصفح للشات)</span>
+          </div>
+          <audio id="audioPreview" controls style="width: 100%; height: 32px;"></audio>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h2 style="margin: 0;">شاشة القراءة</h2>
+          <div style="display: flex; gap: 6px;">
+            <div id="syllableToggle" class="toggle-chip" onclick="toggleSyllables()">تقطيع المقاطع</div>
+            <div id="pacerToggle" class="toggle-chip" onclick="togglePacer()">الموجه (Pacer)</div>
+          </div>
+        </div>
+        <div id="readingArea" class="reading-box">النص سيظهر هنا بعد تجهيزه...</div>
+        <div id="tooltip" class="tooltip-card"></div>
+      </div>
+
+    </div>
+
+    <!-- العمود الثاني: التقييم الملون وبنك الكلمات -->
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+
+      <!-- لوحة التقييم الشامل الملونة -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>التقييم الشامل للأداء</h2>
+          <div id="scoreDisplay" class="score-badge" style="display:none;">- / 10</div>
+        </div>
+
+        <div id="behaviorContainer" class="behavior-grid">
+          <div class="metric-card metric-blue">
+            <div class="title">⏱️ إيقاع وهدوء الإلقاء (Pace & Tone)</div>
+            <div id="m_pace" style="color: var(--muted); font-size: 0.8rem;">بانتظار تحليل التسجيل...</div>
+          </div>
+          <div class="metric-card metric-teal">
+            <div class="title">🫁 الوقفات ومواضع التّنفس (Breathing & Pauses)</div>
+            <div id="m_pauses" style="color: var(--muted); font-size: 0.8rem;">بانتظار تحليل التسجيل...</div>
+          </div>
+          <div class="metric-card metric-yellow">
+            <div class="title">🎙️ وضوح الصوت والمخارج (Clarity & Noise)</div>
+            <div id="m_clarity" style="color: var(--muted); font-size: 0.8rem;">بانتظار تحليل التسجيل...</div>
+          </div>
+          <div class="metric-card metric-purple">
+            <div class="title">💡 الخلاصة والتوجيه الفوري (Key Takeaway)</div>
+            <div id="m_takeaway" style="color: var(--muted); font-size: 0.8rem;">بانتظار تحليل التسجيل...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- استيراد JSON -->
+      <div class="card">
+        <h2>استيراد كود التقييم</h2>
+        <textarea id="jsonInput" style="height: 60px;" placeholder='{"score": 7, "behavior": {...}, "errors": [...]}'></textarea>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="applyJsonEvaluation()">تطبيق النتيجة وتلوين الأخطاء</button>
+        </div>
+      </div>
+
+      <!-- بنك الكلمات -->
+      <div class="card">
+        <h2>بنك الكلمات المتعثرة</h2>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 0.8rem; font-weight: bold; color: var(--warning); margin-bottom: 6px;">🎯 كلمات هذا النص:</div>
+          <div id="currentSessionWords" style="direction: ltr; text-align: left; display: flex; flex-wrap: wrap; gap: 6px; min-height: 24px;">
+            <span style="color: var(--muted); font-size: 0.8rem;">لا توجد أخطاء في هذا النص حتى الآن.</span>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border); padding-top: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <button class="btn-secondary btn-sm" onclick="toggleArchive()">📂 الكلمات السابقة (<span id="archiveCount">0</span>)</button>
+            <button class="btn-secondary btn-sm" style="color: var(--danger);" onclick="clearArchive()">مسح السجل</button>
+          </div>
+          <div id="archiveContainer" style="display: none; direction: ltr; text-align: left; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px;"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let currentRawText = "";
+  let mediaRecorder, audioChunks = [], isRecording = false;
+  let showSyllables = false, pacerInterval = null;
+  let audioBlob = null;
+  let availableVoices = [];
+
+  function populateVoices() {
+    if (!('speechSynthesis' in window)) return;
+    const all = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    
+    all.sort((a, b) => {
+      const aNat = a.name.includes('Natural') || a.name.includes('Online');
+      const bNat = b.name.includes('Natural') || b.name.includes('Online');
+      return (bNat ? 1 : 0) - (aNat ? 1 : 0);
+    });
+
+    availableVoices = all;
+    const sel = document.getElementById('voiceSelect');
+    sel.innerHTML = '';
+    availableVoices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const isNat = v.name.includes('Natural') || v.name.includes('Online');
+      opt.textContent = `${isNat ? '⭐ ' : ''}${v.name} (${v.lang})`;
+      sel.appendChild(opt);
+    });
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+    populateVoices();
+  }
+
+  function handleAudioModeChange() {
+    const mode = document.getElementById('audioModeSelect').value;
+    const voiceWrapper = document.getElementById('voiceWrapper');
+    voiceWrapper.style.display = (mode === 'tts') ? 'inline-flex' : 'none';
+  }
+
+  document.getElementById('rateRange').addEventListener('input', (e) => {
+    document.getElementById('rateVal').textContent = `${e.target.value}x`;
+  });
+
+  function playConfiguredAudio(word) {
+    const mode = document.getElementById('audioModeSelect').value;
+    if (mode === 'tts') {
+      speakInstant(word);
+    } else {
+      const srcMap = {
+        'human_free': 1,
+        'human_wiki': 2,
+        'human_cambridge_us': 3,
+        'human_cambridge_uk': 4
+      };
+      playHumanAudio(word, srcMap[mode] || 1);
+    }
+  }
+
+  function speakInstant(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const clean = text.replace(/[^a-zA-Z]/g, '');
+    const utter = new SpeechSynthesisUtterance(clean);
+    const sel = document.getElementById('voiceSelect');
+    if (availableVoices[sel.value]) {
+      utter.voice = availableVoices[sel.value];
+    }
+    utter.rate = parseFloat(document.getElementById('rateRange').value) || 0.85;
+    window.speechSynthesis.speak(utter);
+  }
+
+  async function playHumanAudio(word, sourceIndex) {
+    const status = document.getElementById('humanAudioStatus');
+    if (status) status.textContent = 'جاري طلب التسجيل البشري...';
+    const clean = word.toLowerCase().replace(/[^a-z]/g, '');
+    if (!clean) return;
+
+    let audioUrl = null;
+
+    try {
+      if (sourceIndex === 1) {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${clean}`);
+        const data = await res.json();
+        if (Array.isArray(data) && data[0].phonetics) {
+          for (const p of data[0].phonetics) {
+            if (p.audio && p.audio.endsWith('.mp3')) {
+              audioUrl = p.audio;
+              break;
+            }
+          }
+        }
+      } else if (sourceIndex === 2) {
+        audioUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/En-us-${clean}.ogg`;
+      } else if (sourceIndex === 3) {
+        audioUrl = `https://dictionary.cambridge.org/media/english/us_pron/${clean.charAt(0)}/${clean.slice(0,3)}/${clean.slice(0,5)}/${clean}.mp3`;
+      } else if (sourceIndex === 4) {
+        audioUrl = `https://dictionary.cambridge.org/media/english/uk_pron/${clean.charAt(0)}/${clean.slice(0,3)}/${clean.slice(0,5)}/${clean}.mp3`;
+      }
+
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.playbackRate = parseFloat(document.getElementById('rateRange').value) || 0.85;
+        audio.oncanplaythrough = () => {
+          if (status) status.textContent = 'تم التشغيل بنجاح ✔️';
+          audio.play();
+        };
+        audio.onerror = () => {
+          if (status) status.textContent = 'الملف غير متوفر في هذا المصدر، تم التحويل للنطق السريع.';
+          speakInstant(clean);
+        };
+      } else {
+        if (status) status.textContent = 'لم يتوفر تسجيل في المصدر، تم استخدام نطق المتصفح.';
+        speakInstant(clean);
+      }
+    } catch (e) {
+      if (status) status.textContent = 'تعذر الاتصال بالمصدر، تم استخدام نطق المتصفح.';
+      speakInstant(clean);
+    }
+  }
+
+  function loadText() {
+    const raw = document.getElementById('rawInput').value.trim();
+    if (!raw) return;
+    currentRawText = raw;
+    renderText();
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('tooltip').style.display = 'none';
+  }
+
+  function renderText() {
+    const box = document.getElementById('readingArea');
+    const words = currentRawText.split(/\s+/);
+    
+    let html = words.map((w, idx) => {
+      let clean = w.replace(/[^a-zA-Z]/g, '');
+      let display = w;
+
+      if (showSyllables && clean.length > 5) {
+        display = splitSyllables(w);
+      }
+
+      const isComplex = clean.length >= 8 || /[bcdfghjklmnpqrstvwxyz]{3,}/i.test(clean);
+      const hasTrickyEnd = /(s|es|ed)$/i.test(clean);
+
+      let classes = [];
+      if (isComplex) classes.push('hl-complex');
+      if (hasTrickyEnd) classes.push('hl-end');
+
+      return `<span id="w_${idx}" class="${classes.join(' ')}" onclick="playConfiguredAudio('${clean}')">${display}</span>`;
+    }).join(' ');
+
+    html = html.replace(/([,;])/g, '$1 <span class="pause-mark">|</span>');
+    html = html.replace(/([.?!])/g, '$1 <span class="pause-mark">||</span><br>');
+
+    box.innerHTML = html;
+  }
+
+  function splitSyllables(word) {
+    return word.replace(/([aeiouy]{1,2})([bcdfghjklmnpqrstvwxyz]{1,2})/gi, '$1-$2');
+  }
+
+  function toggleSyllables() {
+    showSyllables = !showSyllables;
+    document.getElementById('syllableToggle').classList.toggle('active', showSyllables);
+    renderText();
+  }
+
+  function togglePacer() {
+    const chip = document.getElementById('pacerToggle');
+    if (pacerInterval) {
+      clearInterval(pacerInterval);
+      pacerInterval = null;
+      chip.classList.remove('active');
+      document.querySelectorAll('.pacer-active').forEach(el => el.classList.remove('pacer-active'));
+      return;
+    }
+    chip.classList.add('active');
+    const spans = document.querySelectorAll('#readingArea span[id^="w_"]');
+    let idx = 0;
+    pacerInterval = setInterval(() => {
+      spans.forEach(s => s.classList.remove('pacer-active'));
+      if (idx < spans.length) {
+        spans[idx].classList.add('pacer-active');
+        idx++;
+      } else {
+        clearInterval(pacerInterval);
+        pacerInterval = null;
+        chip.classList.remove('active');
+      }
+    }, 450);
+  }
+
+  // دالة تحويل الصوت إلى صيغة WAV محلياً بالكامل
+  function audioBufferToWav(buffer) {
+    const numOfChan = buffer.numberOfChannels;
+    const length = buffer.length * numOfChan * 2 + 44;
+    const out = new DataView(new ArrayBuffer(length));
+    const channels = [];
+    let sampleRate = buffer.sampleRate;
+    let offset = 0;
+    let pos = 0;
+
+    function setUint16(data) {
+      out.setUint16(pos, data, true);
+      pos += 2;
+    }
+    function setUint32(data) {
+      out.setUint32(pos, data, true);
+      pos += 4;
+    }
+
+    setUint32(0x46464952); // "RIFF"
+    setUint32(length - 8);
+    setUint32(0x45564157); // "WAVE"
+    setUint32(0x20746d66); // "fmt " chunk
+    setUint32(16); // length = 16
+    setUint16(1);  // PCM
+    setUint16(numOfChan);
+    setUint32(sampleRate);
+    setUint32(sampleRate * 2 * numOfChan);
+    setUint16(numOfChan * 2);
+    setUint16(16); // 16-bit
+    setUint32(0x61746164); // "data" chunk
+    setUint32(length - pos - 4);
+
+    for (let i = 0; i < buffer.numberOfChannels; i++) {
+      channels.push(buffer.getChannelData(i));
+    }
+
+    while (offset < buffer.length) {
+      for (let i = 0; i < numOfChan; i++) {
+        let sample = Math.max(-1, Math.min(1, channels[i][offset]));
+        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+        out.setInt16(pos, sample, true);
+        pos += 2;
+      }
+      offset++;
+    }
+    return new Blob([out.buffer], { type: 'audio/wav' });
+  }
+
+  // بدء وإيقاف التسجيل وحفظ الملف بالصيغة المحددة
+  async function toggleRecord() {
+    const btn = document.getElementById('recordBtn');
+    if (!isRecording) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        
+        mediaRecorder.onstop = async () => {
+          const selectedFormat = document.getElementById('audioFormatSelect').value;
+          const rawBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+          let finalBlob = rawBlob;
+          let filename = `reading_${Date.now()}.webm`;
+
+          if (selectedFormat === 'wav') {
+            try {
+              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              const arrayBuffer = await rawBlob.arrayBuffer();
+              const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+              finalBlob = audioBufferToWav(decodedBuffer);
+              filename = `reading_${Date.now()}.wav`;
+            } catch (err) {
+              console.warn('WAV conversion fallback to webm:', err);
+              finalBlob = rawBlob;
+              filename = `reading_${Date.now()}.webm`;
+            }
+          }
+
+          audioBlob = finalBlob;
+          const url = URL.createObjectURL(finalBlob);
+
+          const pBox = document.getElementById('playerBox');
+          const preview = document.getElementById('audioPreview');
+          preview.src = url;
+          pBox.style.display = 'block';
+
+          const notice = document.getElementById('downloadStatusNotice');
+          notice.textContent = `تم التنزيل بصيغة (${selectedFormat.toUpperCase()}) تلقائياً - اسحبه للشات`;
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        btn.classList.add('recording');
+        btn.innerHTML = '⏹️ إيقاف التسجيل وحفظه';
+      } catch (err) {
+        alert('يرجى تفعيل صلاحية المايكروفون بالمتصفح.');
+      }
+    } else {
+      mediaRecorder.stop();
+      isRecording = false;
+      btn.classList.remove('recording');
+      btn.innerHTML = '🔴 بدء التسجيل';
+    }
+  }
+
+  function copyPrompt() {
+    const text = currentRawText || document.getElementById('rawInput').value.trim();
+    if (!text) {
+      alert('يرجى إدخال النص وتجهيزه أولاً.');
+      return;
+    }
+    const prompt = `استمع للمقطع الصوتي وطابقه مع النص المستهدف لتقييم النطق والأداء الصوتي بموضوعية وبدون مجاملة.
+ركز على إسقاط نهايات الكلمات، عجن المقاطع، تقييم هدوء النبرة، إيقاع القراءة ومواضع التنفس.
+ممنوع استخدام أي تعليقات // داخل الكود. أخرج الإجابة فقط ككود JSON صالح بهذا الشكل:
+
+{
+  "score": 6,
+  "behavior": {
+    "pace_and_tone": "تقييم نبرة الصوت وهدوء الإلقاء",
+    "breathing_pauses": "تقييم مواضع التنفس والوقفات",
+    "clarity": "تقييم ووضوح البيئة ومخارج الصوت",
+    "takeaway": "خلاصة في سطرين لأهم عادة إيجابية وفخ يجب تجنبه"
+  },
+  "errors": [
+    {
+      "word": "ExactWord",
+      "heard_as": "how it sounded",
+      "type": "ending_dropped",
+      "correction": "correct pronunciation",
+      "reason": "سبب الخطأ باختصار"
+    }
+  ]
+}
+
+النص المستهدف:
+"""
+${text}
+"""`;
+
+    navigator.clipboard.writeText(prompt).then(() => {
+      alert('تم نسخ البرومبت بنجاح! اسحب ملف التسجيل من شريط التنزيلات وألصق البرومبت في الشات.');
+    }).catch(() => alert('تعذر النسخ.'));
+  }
+
+  function applyJsonEvaluation() {
+    let raw = document.getElementById('jsonInput').value.trim();
+    if (!raw) return;
+
+    raw = raw.replace(/```json|```/g, '').replace(/\/\/.*$/gm, '');
+
+    try {
+      const data = JSON.parse(raw);
+      
+      const badge = document.getElementById('scoreDisplay');
+      badge.textContent = `${data.score} / 10`;
+      badge.style.display = 'inline-flex';
+      badge.style.borderColor = data.score >= 8 ? 'var(--success)' : (data.score >= 5 ? 'var(--warning)' : 'var(--danger)');
+
+      if (data.behavior) {
+        document.getElementById('m_pace').textContent = data.behavior.pace_and_tone || 'لا توجد ملاحظة';
+        document.getElementById('m_pauses').textContent = data.behavior.breathing_pauses || 'لا توجد ملاحظة';
+        document.getElementById('m_clarity').textContent = data.behavior.clarity || 'لا توجد ملاحظة';
+        document.getElementById('m_takeaway').textContent = data.behavior.takeaway || 'لا توجد ملاحظة';
+      }
+
+      const box = document.getElementById('readingArea');
+      const spans = box.querySelectorAll('span[id^="w_"]');
+      const errMap = new Map();
+      const sessionWords = [];
+
+      (data.errors || []).forEach(e => {
+        const c = e.word.toLowerCase().replace(/[^a-z]/g, '');
+        errMap.set(c, e);
+        if (!sessionWords.includes(c)) sessionWords.push(c);
+      });
+
+      spans.forEach(s => {
+        const clean = s.textContent.toLowerCase().replace(/[^a-z]/g, '');
+        if (errMap.has(clean)) {
+          const err = errMap.get(clean);
+          s.className = (err.type === 'ending_dropped') ? 'word-error-end' : 'word-error-stumble';
+          s.onclick = () => showTooltip(err);
+        } else if (clean.length > 0) {
+          s.className = 'word-correct';
+          s.onclick = () => playConfiguredAudio(clean);
+        }
+      });
+
+      let historyWords = JSON.parse(localStorage.getItem('reading_archive_words') || '[]');
+      sessionWords.forEach(w => {
+        if (!historyWords.includes(w)) historyWords.push(w);
+      });
+      localStorage.setItem('reading_archive_words', JSON.stringify(historyWords));
+
+      renderSessionBank(sessionWords);
+      renderArchiveBank();
+    } catch (e) {
+      alert('حدث خطأ في قراءة كود الـ JSON.');
+    }
+  }
+
+  function showTooltip(err) {
+    const tip = document.getElementById('tooltip');
+    tip.style.display = 'block';
+    tip.innerHTML = `
+      <div style="font-weight: bold; color: #fff;">الكلمة: <span style="direction: ltr; display:inline-block;">${err.word}</span></div>
+      <div><strong>سُمعت منك:</strong> <span style="color: #f87171; direction: ltr; display:inline-block;">${err.heard_as}</span></div>
+      <div><strong>النطق الصوتي:</strong> <span style="color: #34d399; direction: ltr; display:inline-block;">${err.correction}</span></div>
+      <div><strong>السبب:</strong> ${err.reason}</div>
+      
+      <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+        <button style="width: auto; background: var(--accent); padding: 4px 8px; border-radius: 4px;" onclick="speakInstant('${err.word}')">⚡ نطق فوري (المتصفح)</button>
+      </div>
+
+      <div class="human-audio-box">
+        <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">🎙️ مصادر النطق البشري الحقيقي (اختر المصدر لسماعه):</div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="source-btn" onclick="playHumanAudio('${err.word}', 1)">🔊 القاموس الحر</button>
+          <button class="source-btn" onclick="playHumanAudio('${err.word}', 2)">🔊 ويكيميديا</button>
+          <button class="source-btn" onclick="playHumanAudio('${err.word}', 3)">🇺🇸 كامبريدج (أمريكي)</button>
+          <button class="source-btn" onclick="playHumanAudio('${err.word}', 4)">🇬🇧 كامبريدج (بريطاني)</button>
+        </div>
+        <div id="humanAudioStatus" style="font-size: 0.75rem; color: var(--info); margin-top: 4px;"></div>
+      </div>
+    `;
+    playConfiguredAudio(err.word);
+  }
+
+  function renderSessionBank(words) {
+    const box = document.getElementById('currentSessionWords');
+    if (words.length === 0) {
+      box.innerHTML = '<span style="color: var(--success); font-size: 0.8rem;">🎉 قراءة متقنة خالية من الأخطاء!</span>';
+      return;
+    }
+    box.innerHTML = words.map(w => `
+      <span class="word-badge" onclick="playConfiguredAudio('${w}')">
+        🔊 ${w}
+      </span>
+    `).join('');
+  }
+
+  function renderArchiveBank() {
+    const box = document.getElementById('archiveContainer');
+    const count = document.getElementById('archiveCount');
+    let words = JSON.parse(localStorage.getItem('reading_archive_words') || '[]');
+    count.textContent = words.length;
+
+    if (words.length === 0) {
+      box.innerHTML = '<span style="color: var(--muted); font-size: 0.8rem;">الأرشيف فارغ.</span>';
+      return;
+    }
+
+    box.innerHTML = words.map((w, i) => `
+      <span class="word-badge">
+        <span onclick="playConfiguredAudio('${w}')">🔊 ${w}</span>
+        <span class="del-btn" onclick="deleteArchiveWord(${i})" title="إزالة من البنك">&times;</span>
+      </span>
+    `).join('');
+  }
+
+  function deleteArchiveWord(idx) {
+    let words = JSON.parse(localStorage.getItem('reading_archive_words') || '[]');
+    words.splice(idx, 1);
+    localStorage.setItem('reading_archive_words', JSON.stringify(words));
+    renderArchiveBank();
+  }
+
+  function clearArchive() {
+    if (confirm('هل أنت متأكد من مسح جميع كلمات الأرشيف؟')) {
+      localStorage.removeItem('reading_archive_words');
+      renderArchiveBank();
+    }
+  }
+
+  function toggleArchive() {
+    const c = document.getElementById('archiveContainer');
+    c.style.display = (c.style.display === 'none' || c.style.display === '') ? 'flex' : 'none';
+  }
+
+  renderArchiveBank();
+</script>
+
+</body>
+</html>
