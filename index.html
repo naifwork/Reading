@@ -180,6 +180,7 @@
         <label>السرعة:</label>
         <input type="range" id="rateRange" min="0.5" max="1.2" step="0.1" value="0.85" style="width: 70px;">
         <span id="rateVal" style="color: var(--muted);">0.85x</span>
+        <button type="button" class="btn-secondary btn-sm" onclick="togglePhoneticGuide()" style="padding: 3px 8px; font-size: 0.75rem; border-color: #6366f1; color: #a5b4fc;" title="دليل الأحرف الصوتية ورموز IPA">📖 دليل الأحرف الصوتية</button>
       </div>
     </div>
   </div>
@@ -248,16 +249,95 @@
               <select id="warmupModeSelect" style="padding: 2px 4px; font-size: 0.75rem;">
                 <option value="word" selected>🔤 كلمة بكلمة</option>
                 <option value="sentence">📑 جملة بجملة</option>
+                <option value="trans_only">📖 ترجمة الكلمة</option>
+                <option value="trans_read">🔊📖 ترجمة وقراءة الكلمة</option>
                 <option value="none">🚫 معطّل (صامت)</option>
               </select>
             </div>
-            <button id="readAllBtn" class="btn-secondary btn-sm" onclick="toggleReadAll()" title="قراءة النص كاملاً">▶️ قراءة الكل</button>
+            <button id="readAllBtn" class="btn-secondary btn-sm" onclick="toggleReadAll()" title="تشغيل / إيقاف مؤقت">▶️ تشغيل</button>
+            <button id="stopAllBtn" class="btn-secondary btn-sm" onclick="stopReadAll()" style="display: none; color: var(--danger);" title="إيقاف نهائي والعودة للبداية">⏹️ إيقاف</button>
             <div id="syllableToggle" class="toggle-chip" onclick="toggleSyllables()">تقطيع المقاطع</div>
             <div id="pacerToggle" class="toggle-chip" onclick="togglePacer()">الموجه (Pacer)</div>
           </div>
         </div>
         <div id="readingArea" class="reading-box">النص سيظهر هنا بعد تجهيزه...</div>
         <div id="tooltip" class="tooltip-card"></div>
+
+        <!-- نافذة دليل الأحرف الصوتية (IPA Guide) -->
+        <div id="phoneticGuideModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(3px); z-index:10000; align-items:center; justify-content:center; padding:14px;">
+          <div style="background:#18181c; border:1px solid #6366f1; border-radius:12px; width:100%; max-width:620px; box-shadow:0 12px 35px rgba(0,0,0,0.85); overflow:hidden; display:flex; flex-direction:column; max-height:88vh; text-align:right;">
+            <div style="background:#1f1f26; padding:10px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.15rem;">🔤</span>
+                <span style="font-weight:700; color:#fff; font-size:0.95rem;">دليل الأحرف والرموز الصوتية (IPA Guide)</span>
+              </div>
+              <button onclick="togglePhoneticGuide()" style="background:transparent; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer; padding:2px 6px; min-width:auto;">✕</button>
+            </div>
+            <div style="padding:14px; overflow-y:auto; font-size:0.8rem; line-height:1.6; color:var(--text);">
+              
+              <div style="font-weight:bold; color:#60a5fa; margin-bottom:6px;">🔹 الحروف الساكنة الشائعة ذات الرموز الخاصة:</div>
+              <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:0.75rem; background:#121216; border-radius:6px; overflow:hidden;">
+                <thead>
+                  <tr style="background:#24242a; color:#fff; text-align:right;">
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">الرمز</th>
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">الصوت بالعربي</th>
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">أمثلة ونطق الكلمة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/θ/</td><td style="padding:5px 8px;">حرف الثاء (ث)</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>th</b>in, <b>th</b>ink</td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/ð/</td><td style="padding:5px 8px;">حرف الذال (ذ)</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>th</b>is, mo<b>th</b>er</td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/ʃ/</td><td style="padding:5px 8px;">حرف الشين (ش)</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>sh</b>ip, na<b>ti</b>on</td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/tʃ/</td><td style="padding:5px 8px;">صوت (تـش)</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>ch</b>urch, ma<b>tch</b></td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/ʒ/</td><td style="padding:5px 8px;">صوت الجيم المعطشة الرقيقة</td><td style="padding:5px 8px; direction:ltr; text-align:left;">vi<b>si</b>on, plea<b>su</b>re</td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/dʒ/</td><td style="padding:5px 8px;">حرف الجيم العادية الفصيحة (دج)</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>j</b>ob, bri<b>dge</b></td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#38bdf8; font-weight:bold;">/ŋ/</td><td style="padding:5px 8px;">نون أنفية رخوة (الغُنّة بدون نطق الجيم)</td><td style="padding:5px 8px; direction:ltr; text-align:left;">si<b>ng</b>, lo<b>ng</b></td></tr>
+                </tbody>
+              </table>
+
+              <div style="font-weight:bold; color:#fde047; margin-bottom:6px;">🔸 حروف العلة والأصوات الصوتية المركبة (Vowels):</div>
+              <table style="width:100%; border-collapse:collapse; font-size:0.75rem; background:#121216; border-radius:6px; overflow:hidden;">
+                <thead>
+                  <tr style="background:#24242a; color:#fff; text-align:right;">
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">الرمز</th>
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">طريقة النطق بالعربي</th>
+                    <th style="padding:6px 8px; border-bottom:1px solid var(--border);">أمثلة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/iː/</td><td style="padding:5px 8px;">ياء ممدودة طويلة (كسرة ممدودة)</td><td style="padding:5px 8px; direction:ltr; text-align:left;">s<b>ee</b>, m<b>ee</b>t</td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/ɪ/</td><td style="padding:5px 8px;">كسرة خفيفة خاطفة وقصيرة</td><td style="padding:5px 8px; direction:ltr; text-align:left;">s<b>i</b>t, h<b>i</b>t</td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/uː/</td><td style="padding:5px 8px;">واو ممدودة طويلة (ضمة طويلة)</td><td style="padding:5px 8px; direction:ltr; text-align:left;">t<b>oo</b>, bl<b>ue</b></td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/ʊ/</td><td style="padding:5px 8px;">ضمة خفيفة مقبوضة</td><td style="padding:5px 8px; direction:ltr; text-align:left;">p<b>u</b>t, b<b>oo</b>k</td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/ə/</td><td style="padding:5px 8px;">الشوا (Schwa): صوت فتحة خافتة ومهملة جداً</td><td style="padding:5px 8px; direction:ltr; text-align:left;"><b>a</b>bout, teach<b>er</b></td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/æ/</td><td style="padding:5px 8px;">ألف مفتوحة عريضة ومفخمة قليلاً</td><td style="padding:5px 8px; direction:ltr; text-align:left;">c<b>a</b>t, b<b>a</b>d</td></tr>
+                  <tr><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/aɪ/</td><td style="padding:5px 8px;">صوت (آي)</td><td style="padding:5px 8px; direction:ltr; text-align:left;">m<b>y</b>, t<b>i</b>me</td></tr>
+                  <tr style="background:rgba(255,255,255,0.02);"><td style="padding:5px 8px; font-family:monospace; color:#facc15; font-weight:bold;">/eɪ/</td><td style="padding:5px 8px;">صوت (إيْ) مائل للفتحة والياء</td><td style="padding:5px 8px; direction:ltr; text-align:left;">d<b>ay</b>, m<b>a</b>ke</td></tr>
+                </tbody>
+              </table>
+
+            </div>
+            <div style="background:#1f1f26; padding:8px 14px; text-align:left;">
+              <button class="btn-secondary btn-sm" onclick="togglePhoneticGuide()">إغلاق الدليل</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- نافذة الترجمة العائمة المنبثقة -->
+        <div id="translationModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(3px); z-index:9999; align-items:center; justify-content:center; padding:14px;">
+          <div style="background:#18181c; border:1px solid #3b82f6; border-radius:12px; width:100%; max-width:480px; box-shadow:0 10px 30px rgba(0,0,0,0.8); overflow:hidden; display:flex; flex-direction:column; max-height:85vh; text-align:right;">
+            <div style="background:#1f1f26; padding:10px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.1rem;">📖</span>
+                <span id="transModalTitle" style="font-weight:700; color:#fff; font-size:1rem; direction:ltr;">Word</span>
+              </div>
+              <button onclick="closeTranslationModal()" style="background:transparent; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer; padding:2px 6px; min-width:auto;">✕</button>
+            </div>
+            <div id="transModalBody" style="padding:14px; overflow-y:auto; font-size:0.85rem; line-height:1.6; color:var(--text);">
+              جاري الترجمة والتحليل...
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -346,6 +426,282 @@
       playConfiguredAudio(clean);
     } else if (mode === 'sentence') {
       playSentenceAtWord(wordIdx);
+    } else if (mode === 'trans_only') {
+      openTranslationModal(clean);
+    } else if (mode === 'trans_read') {
+      playConfiguredAudio(clean);
+      openTranslationModal(clean);
+    }
+  }
+
+  function closeTranslationModal() {
+    const m = document.getElementById('translationModal');
+    if (m) m.style.display = 'none';
+  }
+
+  function togglePhoneticGuide() {
+    const m = document.getElementById('phoneticGuideModal');
+    if (m) m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'flex' : 'none';
+  }
+
+  function getSyllableBreakdown(word) {
+    const clean = word.toLowerCase().replace(/[^a-z]/g, '');
+    if (clean.length <= 3) return clean;
+    const parts = clean.replace(/([aeiouy]{1,2})([bcdfghjklmnpqrstvwxyz]{1,2})/gi, '$1·$2');
+    return parts.split('·').join(' · ');
+  }
+
+  // محرك ترجمة سياقي ذكي وعالي الدقة
+  async function fetchArabicTranslation(text) {
+    if (!text || !text.trim()) return '';
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text.trim())}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data[0]) {
+          return data[0].map(item => item[0]).join('').trim();
+        }
+      }
+    } catch (_) {}
+    try {
+      const res2 = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ar`);
+      const data2 = await res2.json();
+      return data2.responseData?.translatedText || '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  // التقاط جملة حقيقية من النص المعروض حالياً
+  function findSentenceInCurrentText(targetWord) {
+    const raw = currentRawText || document.getElementById('rawInput')?.value || '';
+    if (!raw) return null;
+    const sentences = raw.match(/[^.!?\n\r]+[.!?\n\r]*/g) || [raw];
+    const regex = new RegExp(`\\b${targetWord}\\b`, 'i');
+    for (let s of sentences) {
+      const trimmed = s.trim();
+      if (regex.test(trimmed) && trimmed.length > 5) {
+        return trimmed;
+      }
+    }
+    return null;
+  }
+
+  // جلب جملة بشرية واقعية من بنك الجمل Tatoeba
+  async function fetchTatoebaExample(targetWord) {
+    try {
+      const url = `https://tatoeba.org/en/api_v0/search?from=eng&query=${encodeURIComponent(targetWord)}&sort=relevance`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.results && data.results.length) {
+          const regex = new RegExp(`\\b${targetWord}\\b`, 'i');
+          for (let item of data.results) {
+            const txt = item.text?.trim() || '';
+            if (regex.test(txt) && txt.length <= 120 && txt.length > 10) {
+              return txt;
+            }
+          }
+          if (data.results[0]?.text) return data.results[0].text.trim();
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  async function openTranslationModal(word) {
+    const modal = document.getElementById('translationModal');
+    const title = document.getElementById('transModalTitle');
+    const body = document.getElementById('transModalBody');
+    if (!modal || !title || !body) return;
+
+    const clean = word.toLowerCase().replace(/[^a-z]/g, '');
+    const syllables = getSyllableBreakdown(word);
+
+    title.textContent = word;
+    body.innerHTML = `
+      <div style="text-align:center; padding:24px; color:var(--muted);">
+        <div style="margin-bottom:10px; font-size:1.6rem; animation:pulse 1s infinite;">⏳</div>
+        <div style="font-size:0.95rem; font-weight:600;">جاري تحليل المفردة وجلب المعاني والمترادفات والأمثلة...</div>
+      </div>
+    `;
+    modal.style.display = 'flex';
+
+    try {
+      const textSentence = findSentenceInCurrentText(clean);
+      const [dictRes, mainTrans, myMemoryRes, tatoebaEx] = await Promise.all([
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${clean}`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetchArabicTranslation(word),
+        fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ar`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetchTatoebaExample(clean)
+      ]);
+
+      // استخراج الرموز الصوتية وتصنيف الكلمة
+      let phoneticText = '';
+      let partOfSpeech = [];
+      let dictExample = null;
+
+      if (Array.isArray(dictRes) && dictRes[0]) {
+        if (dictRes[0].phonetic) {
+          phoneticText = dictRes[0].phonetic;
+        } else if (dictRes[0].phonetics && dictRes[0].phonetics.length) {
+          const phObj = dictRes[0].phonetics.find(p => p.text);
+          if (phObj) phoneticText = phObj.text;
+        }
+
+        if (dictRes[0].meanings) {
+          dictRes[0].meanings.forEach(m => {
+            if (m.partOfSpeech && !partOfSpeech.includes(m.partOfSpeech)) partOfSpeech.push(m.partOfSpeech);
+            if (!dictExample && m.definitions) {
+              for (let d of m.definitions) {
+                if (d.example) { dictExample = d.example; break; }
+              }
+            }
+          });
+        }
+      }
+
+      // تجميع المترادفات والمعاني العربية الإضافية
+      let primaryArabic = (mainTrans || '').trim();
+      let synonymsList = [];
+
+      if (myMemoryRes && myMemoryRes.matches) {
+        myMemoryRes.matches.forEach(m => {
+          const trans = (m.translation || '').trim();
+          if (trans && /^[\u0600-\u06FF\s]+$/.test(trans)) {
+            if (!primaryArabic) {
+              primaryArabic = trans;
+            } else if (trans !== primaryArabic && !synonymsList.includes(trans)) {
+              synonymsList.push(trans);
+            }
+          }
+        });
+      }
+
+      // تجهيز الأمثلة الحقيقية
+      const examplesToTranslate = [];
+      if (textSentence) {
+        examplesToTranslate.push({ en: textSentence, sourceLabel: '📌 سياق الكلمة من نصك الحالي' });
+      }
+      if (tatoebaEx && tatoebaEx !== textSentence) {
+        examplesToTranslate.push({ en: tatoebaEx, sourceLabel: '🌍 من المحادثات اليومية والواقعية (Tatoeba)' });
+      } else if (dictExample && dictExample !== textSentence) {
+        examplesToTranslate.push({ en: dictExample, sourceLabel: '📖 من معجم كامبريدج ومصادر اللغة' });
+      }
+
+      const translatedExamples = await Promise.all(
+        examplesToTranslate.map(async item => {
+          const ar = await fetchArabicTranslation(item.en);
+          return { en: item.en, ar, sourceLabel: item.sourceLabel };
+        })
+      );
+
+      // تصريفات الكلمة
+      let forms = [];
+      if (partOfSpeech.includes('verb')) {
+        forms.push(`<b>المضارع (Present):</b> ${clean} / ${clean}s`);
+        forms.push(`<b>الماضي (Past):</b> ${clean.endsWith('e') ? clean + 'd' : clean + 'ed'}`);
+        forms.push(`<b>المستمر (Continuous):</b> ${clean.endsWith('e') ? clean.slice(0,-1) + 'ing' : clean + 'ing'}`);
+      } else if (partOfSpeech.includes('noun')) {
+        forms.push(`<b>المفرد (Singular):</b> ${clean}`);
+        forms.push(`<b>الجمع (Plural):</b> ${clean.endsWith('s') || clean.endsWith('ch') || clean.endsWith('sh') ? clean + 'es' : clean + 's'}`);
+      } else {
+        forms.push(`<b>الصيغة الأساسية:</b> ${clean}`);
+        forms.push(`<b>الاشتقاق المقارب:</b> ${clean}ing / ${clean}ed`);
+      }
+
+      function highlightWord(sentence, target) {
+        const regex = new RegExp(`(${target})`, 'gi');
+        return sentence.replace(regex, `<span style="color:#fde047; font-weight:800; background:rgba(253,224,71,0.2); padding:1px 5px; border-radius:4px; text-decoration:underline;">$1</span>`);
+      }
+
+      body.innerHTML = `
+        <!-- بطاقة الترجمة والمقابلة الرئيسية بخط كبير جداً للإنجليزية والعربية معاً -->
+        <div style="margin-bottom:12px; background:linear-gradient(135deg, rgba(37,99,235,0.2), rgba(24,24,28,0.95)); padding:16px; border-radius:12px; border-right:4px solid var(--accent); border:1px solid rgba(59,130,246,0.35);">
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+            <div style="text-align:left;">
+              <span style="font-size:0.75rem; color:#93c5fd; display:block; margin-bottom:2px; font-weight:bold;">الكلمة الإنجليزية:</span>
+              <span style="font-size:1.75rem; font-weight:900; color:#60a5fa; direction:ltr; display:inline-block; letter-spacing:0.5px;">${word}</span>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.75rem; color:#93c5fd; display:block; margin-bottom:2px; font-weight:bold;">المعنى الأساسي:</span>
+              <span style="font-size:1.75rem; font-weight:900; color:#fff; display:inline-block; text-shadow:0 2px 4px rgba(0,0,0,0.6);">${primaryArabic || 'غير متوفر'}</span>
+            </div>
+          </div>
+
+          <!-- المترادفات والمعاني البديلة بخط صغير تحت المعنى الأساسي -->
+          <div style="margin-top:10px;">
+            <div style="font-size:0.75rem; color:#9ca3af; margin-bottom:5px; font-weight:700;">🔄 مترادفات ومعانٍ أخرى باللغة العربية:</div>
+            ${synonymsList.length ? `
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                ${synonymsList.slice(0, 6).map(s => `
+                  <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#e2e8f0; font-size:0.8rem; padding:2px 8px; border-radius:6px; font-weight:600;">${s}</span>
+                `).join('')}
+              </div>
+            ` : `<span style="font-size:0.75rem; color:var(--muted);">لا توجد مترادفات إضافية مسجلة لهذه الكلمة.</span>`}
+          </div>
+
+          ${partOfSpeech.length ? `
+            <div style="font-size:0.75rem; color:var(--muted); margin-top:8px;">
+              نوع الكلمة: <span style="direction:ltr; display:inline-block; color:#93c5fd; font-weight:bold;">${partOfSpeech.join(', ')}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- النطق الصوتي والتقطيع الكتابي -->
+        <div style="margin-bottom:12px; background:#121216; padding:10px 12px; border-radius:8px; border-right:3px solid #8b5cf6;">
+          <div style="font-weight:bold; color:#a78bfa; font-size:0.8rem; margin-bottom:4px;">🗣️ النطق الصوتي والتقطيع:</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <span style="font-size:0.75rem; color:var(--muted);">الرمز الصوتي:</span>
+              <span style="direction:ltr; font-family:monospace; color:#38bdf8; font-weight:bold; font-size:1rem; margin-right:4px;">${phoneticText || `/${clean}/`}</span>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; color:var(--muted);">تقطيع المقاطع:</span>
+              <span style="direction:ltr; font-family:monospace; color:#34d399; font-weight:bold; font-size:1rem; margin-right:4px;">${syllables}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- أمثلة حقيقية هجينة ومترجمة بوضوح -->
+        <div style="margin-bottom:12px; background:#121216; padding:12px; border-radius:8px; border-right:3px solid var(--success);">
+          <div style="font-weight:bold; color:var(--success); font-size:0.85rem; margin-bottom:8px;">💬 أمثلة واقعية مترجمة:</div>
+          ${translatedExamples.length ? translatedExamples.map((item) => `
+            <div style="margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.7rem; color:#9ca3af; margin-bottom:3px; font-weight:600;">${item.sourceLabel}</div>
+              <div style="direction:ltr; text-align:left; color:#e0f2fe; font-size:0.95rem; line-height:1.5;">
+                • ${highlightWord(item.en, clean)}
+              </div>
+              ${item.ar ? `<div style="color:#86efac; font-size:0.88rem; font-weight:600; margin-top:4px;">↲ ${item.ar}</div>` : ''}
+            </div>
+          `).join('') : '<div style="color:var(--muted); font-size:0.8rem;">لا توجد أمثلة مسجلة لهذه الكلمة.</div>'}
+        </div>
+
+        <!-- تصريفات الكلمة -->
+        <div style="margin-bottom:12px; background:#121216; padding:10px 12px; border-radius:8px; border-right:3px solid var(--warning);">
+          <div style="font-weight:bold; color:var(--warning); font-size:0.8rem; margin-bottom:4px;">🔄 تصريفات وأشكال الكلمة:</div>
+          <ul style="list-style:disc; padding-right:18px; margin:0; font-size:0.8rem; color:#e2e2e8;">
+            ${forms.map(f => `<li style="margin-bottom:3px;">${f}</li>`).join('')}
+          </ul>
+        </div>
+
+        <!-- أزرار التحكم -->
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button class="btn-primary btn-sm" style="flex:1; padding:8px 12px; font-size:0.85rem;" onclick="playConfiguredAudio('${clean}')">🔊 استمع للفظ الكلمة</button>
+          <button class="btn-secondary btn-sm" style="flex:1; padding:8px 12px; font-size:0.85rem;" onclick="closeTranslationModal()">إغلاق</button>
+        </div>
+      `;
+    } catch (err) {
+      body.innerHTML = `
+        <div style="color:var(--danger); text-align:center; padding:14px;">
+          تعذر إكمال الترجمة. يرجى التأكد من اتصال الإنترنت.
+          <div style="margin-top:10px;">
+            <button class="btn-secondary btn-sm" onclick="closeTranslationModal()">إغلاق</button>
+          </div>
+        </div>
+      `;
     }
   }
 
@@ -373,68 +729,104 @@
     window.speechSynthesis.speak(utter);
   }
 
+  let currentReadWordIndex = 0;
+  let isPausedAll = false;
+
+  function stopReadAll() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    isReadingAll = false;
+    isPausedAll = false;
+    currentReadWordIndex = 0;
+    const btn = document.getElementById('readAllBtn');
+    const stopBtn = document.getElementById('stopAllBtn');
+    if (btn) btn.innerHTML = '▶️ قراءة الكل';
+    if (stopBtn) stopBtn.style.display = 'none';
+    document.querySelectorAll('#readingArea span[id^="w_"]').forEach(s => s.classList.remove('pacer-active'));
+  }
+
   function toggleReadAll() {
     if (!('speechSynthesis' in window)) return;
     const btn = document.getElementById('readAllBtn');
+    const stopBtn = document.getElementById('stopAllBtn');
 
-    if (isReadingAll) {
-      window.speechSynthesis.cancel();
-      isReadingAll = false;
-      if (btn) btn.innerHTML = '▶️ قراءة الكل';
-      document.querySelectorAll('.pacer-active').forEach(el => el.classList.remove('pacer-active'));
+    if (isReadingAll && !isPausedAll) {
+      window.speechSynthesis.pause();
+      isPausedAll = true;
+      if (btn) btn.innerHTML = '▶️ متابعة';
       return;
     }
 
-    const textToRead = currentRawText || document.getElementById('rawInput').value.trim();
-    if (!textToRead) {
+    if (isReadingAll && isPausedAll) {
+      window.speechSynthesis.resume();
+      isPausedAll = false;
+      if (btn) btn.innerHTML = '⏸️ إيقاف مؤقت';
+      return;
+    }
+
+    const fullText = currentRawText || document.getElementById('rawInput').value.trim();
+    if (!fullText) {
       alert('يرجى إدخال النص وتجهيزه أولاً.');
       return;
     }
 
     window.speechSynthesis.cancel();
+    const allWords = fullText.split(/\s+/).filter(Boolean);
+    const textToRead = allWords.slice(currentReadWordIndex).join(' ');
+
     const utter = new SpeechSynthesisUtterance(textToRead);
     const sel = document.getElementById('voiceSelect');
     if (availableVoices[sel.value]) utter.voice = availableVoices[sel.value];
     utter.rate = parseFloat(document.getElementById('rateRange').value) || 0.85;
 
     const spans = document.querySelectorAll('#readingArea span[id^="w_"]');
+
     utter.onboundary = (e) => {
       if (e.name === 'word') {
         const charIdx = e.charIndex;
         let runningLength = 0;
-        let matchedIdx = -1;
-        const words = textToRead.split(/\s+/).filter(Boolean);
+        let matchedSub = 0;
+        const subWords = textToRead.split(/\s+/).filter(Boolean);
 
-        for (let i = 0; i < words.length; i++) {
-          const wLen = words[i].length;
+        for (let i = 0; i < subWords.length; i++) {
+          const wLen = subWords[i].length;
           if (charIdx >= runningLength && charIdx <= runningLength + wLen) {
-            matchedIdx = i;
+            matchedSub = i;
             break;
           }
           runningLength += wLen + 1;
         }
 
-        if (matchedIdx !== -1 && spans[matchedIdx]) {
+        const actualIndex = currentReadWordIndex + matchedSub;
+        if (spans[actualIndex]) {
           spans.forEach(s => s.classList.remove('pacer-active'));
-          spans[matchedIdx].classList.add('pacer-active');
+          spans[actualIndex].classList.add('pacer-active');
         }
       }
     };
 
     utter.onend = () => {
       isReadingAll = false;
+      isPausedAll = false;
+      currentReadWordIndex = 0;
       if (btn) btn.innerHTML = '▶️ قراءة الكل';
+      if (stopBtn) stopBtn.style.display = 'none';
       spans.forEach(s => s.classList.remove('pacer-active'));
     };
 
     utter.onerror = () => {
       isReadingAll = false;
+      isPausedAll = false;
+      currentReadWordIndex = 0;
       if (btn) btn.innerHTML = '▶️ قراءة الكل';
+      if (stopBtn) stopBtn.style.display = 'none';
       spans.forEach(s => s.classList.remove('pacer-active'));
     };
 
     isReadingAll = true;
-    if (btn) btn.innerHTML = '⏹️ إيقاف القراءة';
+    isPausedAll = false;
+    if (btn) btn.innerHTML = '⏸️ إيقاف مؤقت';
+    if (stopBtn) stopBtn.style.display = 'inline-flex';
     window.speechSynthesis.speak(utter);
   }
   let audioBlob = null;
