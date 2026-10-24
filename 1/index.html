@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Glass Context Vocabulary Lab | معمل المفردات الزجاجي</title>
+  <style>
+    :root {
+      --bg: #08080a;
+      --glass-panel: rgba(22, 22, 28, 0.62);
+      --glass-card: rgba(28, 28, 36, 0.55);
+      --glass-modal: rgba(18, 18, 24, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-focus: rgba(96, 165, 250, 0.45);
+      --text: #f3f3f6;
+      --muted: #9e9ea8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-glow: rgba(37, 99, 235, 0.35);
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --purple: #8b5cf6;
+      --star: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.16) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.14) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 65%);
+      background-attachment: fixed;
+      color: var(--text);
+      padding: 14px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .layout-wrapper {
+      width: 100%;
+      max-width: 1050px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 0 auto;
+    }
+
+    .glass-panel {
+      background: var(--glass-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 { font-size: 1.18rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+    h2 { font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    p.sub { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+    select, input[type="number"], input[type="text"], textarea {
+      background: rgba(10, 10, 14, 0.7);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    textarea {
+      height: 78px;
+      resize: vertical;
+      direction: ltr;
+      text-align: left;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82rem;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    button {
+      flex: 1;
+      min-width: 110px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    button:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover { opacity: 0.95; box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45); }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--glass-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      min-width: auto;
+      flex: none;
+    }
+
+    .filter-bar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 700px) {
+      .filter-bar {
+        grid-template-columns: 1.8fr 0.8fr auto;
+      }
+    }
+
+    #customDomainInputWrapper {
+      display: none;
+      margin-top: 6px;
+    }
+
+    /* شبكة الكلمات الرئيسية */
+    .words-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .word-chip {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .word-chip:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .chip-star {
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: transform 0.2s ease, color 0.2s ease;
+      padding: 2px 4px;
+    }
+    .chip-star.starred {
+      color: var(--star);
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    }
+    .chip-star:hover { transform: scale(1.2); }
+
+    /* النافذة المنبثقة العائمة (Modal Focus Card) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 6, 9, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--glass-modal);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--glass-border-focus);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 660px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 8px;
+    }
+
+    .close-circle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      min-width: auto;
+      flex: none;
+      padding: 0;
+    }
+    .close-circle-btn:hover { background: rgba(239, 68, 68, 0.3); border-color: var(--danger); }
+
+    .word-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .word-en-lg {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #60a5fa;
+      direction: ltr;
+      letter-spacing: 0.5px;
+    }
+
+    .word-ar-lg {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      transition: filter 0.25s ease;
+      cursor: pointer;
+    }
+
+    /* ميزة حجب المعنى للاختبار الذاتي */
+    .word-ar-lg.blurred {
+      filter: blur(8px);
+      user-select: none;
+      opacity: 0.6;
+    }
+
+    .stress-strip {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .stress-part {
+      color: #fde047;
+      font-weight: 900;
+      background: rgba(253, 224, 71, 0.18);
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-decoration: underline;
+    }
+
+    /* صندوق السياق الأصلي */
+    .sentence-box {
+      background: rgba(37, 99, 235, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-right: 4px solid var(--accent);
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sentence-en {
+      font-size: 1.05rem;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .sentence-ar {
+      font-size: 0.9rem;
+      color: #93c5fd;
+      font-weight: 500;
+      transition: filter 0.25s ease;
+    }
+
+    .sentence-ar.blurred {
+      filter: blur(6px);
+      user-select: none;
+      opacity: 0.6;
+    }
+
+    .highlight-target {
+      color: #facc15;
+      font-weight: 800;
+      background: rgba(250, 204, 21, 0.2);
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-decoration: underline;
+    }
+
+    .trap-card {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-right: 4px solid var(--danger);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .audio-actions-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      border-top: 1px dashed var(--glass-border);
+      padding-top: 10px;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      right: 50%;
+      transform: translateX(50%);
+      background: rgba(18, 18, 24, 0.95);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      z-index: 100000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      pointer-events: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout-wrapper">
+
+  <!-- لوحة الإعدادات وتوليد البرومبت المخصص -->
+  <div class="glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div>
+        <h1>معمل المفردات الزجاجي بالسياق الأصلي</h1>
+        <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات الزجاجية المنبثقة، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
+      </div>
+      <button class="btn-secondary btn-sm" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
+    </div>
+
+    <!-- شريط الخيارات: عام / مخصص / عدد الكلمات -->
+    <div class="filter-bar">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 3px;">المجال أو المنهج المستهدف:</label>
+        <select id="domainSelect" onchange="handleDomainChange()">
+          <option value="عام (General Challenging Vocabulary)" selected>عام (General Challenging Vocabulary)</option>
+          <option value="Super Goal 1 (Middle School English)">مناهج التعليم: Super Goal 1</option>
+          <option value="Super Goal 2 & 3">مناهج التعليم: Super Goal 2 & 3</option>
+          <option value="Mega Goal (Secondary Stage)">مناهج الثانوي: Mega Goal</option>
+          <option value="Medical & Healthcare Terminology">المصطلحات الطبية والصحية</option>
+          <option value="Technology, AI & Programming">الذكاء الاصطناعي وهندسة البرمجيات</option>
+          <option value="Business, Economics & Finance">إدارة الأعمال والمالية</option>
+          <option value="Academic TOEFL & IELTS Academic List">الأكاديمي: اختبارات التوفل والآيلتس</option>
+          <option value="Everyday Tricky Phrasal Verbs & Slang">العبارات الشائعة والأفعال المركبة الخادعة</option>
+          <option value="custom">مخصص (اكتب مصدرك بنفسك)...</option>
+        </select>
+
+        <!-- شريط اختيار الصوت والسرعة اليدوية بدقة -->
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <label style="font-size: 0.72rem; color: var(--muted);">صوت المتحدث:</label>
+            <select id="modalVoiceSelect" style="max-width: 190px; font-size: 0.75rem; padding: 3px 6px;"></select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <label style="font-size: 0.72rem; color: var(--muted);">السرعة:</label>
+            <input type="range" id="modalRateSlider" min="0.5" max="1.5" step="0.05" value="0.85" style="width: 75px; accent-color: var(--accent); cursor: pointer;" oninput="updateRateDisplay()">
+            <span id="modalRateDisplay" style="font-size: 0.75rem; font-weight: bold; color: #60a5fa; min-width: 36px;">0.85x</span>
+          </div>
+        </div>
+        <div id="customDomainInputWrapper">
+          <input type="text" id="customDomainText" placeholder="اكتب المجال أو المصدر بدقة (مثال: رواية، مقال علمي، كتاب معين)...">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 3px;">عدد الكلمات المطلوبة:</label>
+        <input type="number" id="wordCountInput" value="8" min="3" max="35">
+      </div>
+
+      <div style="display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap;">
+        <button class="btn-primary" onclick="generateAndCopyPrompt()">📋 نسخ البرومبت المخصص</button>
+        <button class="btn-secondary" style="border-color: #8b5cf6; color: #c084fc;" onclick="openExtractPromptModal()">📑 برومبت استخراج من نص</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- لوحة استيراد كود JSON -->
+  <div class="glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <h2>استيراد مصفوفة الكلمات (JSON)</h2>
+      <button class="btn-secondary btn-sm" onclick="loadSampleContextData()">💡 تحميل عيّنة تجريبية</button>
+    </div>
+    <textarea id="jsonInput" placeholder="ألصق كود JSON المستلم من الذكاء الاصطناعي هنا..."></textarea>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="parseAndMountWords()">تثبيت الكلمات وعرض البطاقات</button>
+      <button class="btn-secondary" onclick="openModalAt(0)">🚀 بدء التصفح المنبثق من البداية</button>
+    </div>
+  </div>
+
+  <!-- شبكة الكلمات الرئيسية -->
+  <div class="glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>فهرس الكلمات (<span id="totalWordsBadge">0</span> مفردة)</h2>
+      <span style="font-size: 0.75rem; color: var(--muted);">انقر على أي بطاقة لفتحها بشكل منبثق</span>
+    </div>
+    <div id="wordsContainer" class="words-grid">
+      <span style="color: var(--muted); font-size: 0.8rem;">لا توجد كلمات محملة حالياً. ألصق كود JSON أو حمل العينة أعلاه.</span>
+    </div>
+  </div>
+
+  <footer style="text-align: center; padding: 12px 0; font-size: 0.78rem; color: var(--muted);">
+    Built with <span style="color: #f59e0b;">⚡</span> By: <span style="color: #60a5fa; font-weight: 700;">Naif</span>
+  </footer>
+
+</div>
+
+<!-- النافذة المنبثقة العائمة (Modal Focus Card) -->
+<div id="modalOverlay" class="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    
+    <div class="modal-top">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="modalCounter" style="font-size: 0.82rem; font-weight: bold; color: var(--muted);">الكلمة: 1 / 8</span>
+        <button id="modalFavBtn" class="btn-secondary btn-sm" onclick="toggleCurrentWordFav()">⭐ مفضلة</button>
+        <button class="btn-secondary btn-sm" onclick="toggleBlurTranslation()">👁️ كشف/حجب المعنى</button>
+      </div>
+      <button class="close-circle-btn" onclick="closeModal()" title="إغلاق (Esc)">✕</button>
+    </div>
+
+    <!-- الكلمة الإنجليزية والمعنى العربي -->
+    <div class="word-headline">
+      <div style="text-align: left;">
+        <div style="font-size: 0.72rem; color: #93c5fd; font-weight: bold; margin-bottom: 2px;">TARGET WORD:</div>
+        <div id="modalWordEn" class="word-en-lg">-</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 0.72rem; color: #93c5fd; font-weight: bold; margin-bottom: 2px;">المعنى العربي (انقر للإظهار/الحجب):</div>
+        <div id="modalWordAr" class="word-ar-lg" onclick="toggleBlurTranslation()">-</div>
+      </div>
+    </div>
+
+    <!-- شريط النبر والتشريح الصوتي -->
+    <div class="stress-strip">
+      <div>
+        <span style="font-size: 0.75rem; color: var(--muted);">الرمز الصوتي (IPA):</span>
+        <span id="modalPhonetic" style="direction: ltr; font-family: monospace; color: #38bdf8; font-weight: bold; font-size: 1.05rem; margin-right: 6px;">-</span>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--muted);">المقاطع وموضع النبر (Stress):</span>
+        <span id="modalBreakdown" style="direction: ltr; font-family: monospace; font-size: 1.05rem; margin-right: 6px;">-</span>
+      </div>
+    </div>
+
+    <!-- الجملة السياقية الأصلية المشتقة منها الكلمة -->
+    <div class="sentence-box">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.75rem; font-weight: bold; color: #60a5fa;">📌 الجملة السياقية الأصلية (Context Sentence):</span>
+        <button class="btn-secondary btn-sm" onclick="speakModalSentence()">🔊 نطق الجملة</button>
+      </div>
+      <div id="modalSentenceEn" class="sentence-en">-</div>
+      <div id="modalSentenceAr" class="sentence-ar">-</div>
+    </div>
+
+    <!-- فخ النطق -->
+    <div class="trap-card">
+      <strong style="color: #f87171;">⚠️ فخ الكلمة:</strong>
+      <span id="modalTrap" style="color: #fff; margin-right: 4px;">-</span>
+    </div>
+
+    <!-- شريط التحكم بالناطق والسرعة داخل بطاقة الكلمة مباشرة -->
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 10px;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <label style="font-size: 0.75rem; color: #93c5fd; font-weight: bold;">🗣️ الناطق:</label>
+        <select id="cardInnerVoiceSelect" onchange="syncCardVoice(this.value)" style="max-width: 180px; font-size: 0.75rem; padding: 3px 6px;"></select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <label style="font-size: 0.75rem; color: #93c5fd; font-weight: bold;">⚡ السرعة:</label>
+        <input type="range" id="cardInnerRateSlider" min="0.5" max="1.5" step="0.05" value="0.85" style="width: 85px; accent-color: var(--accent); cursor: pointer;" oninput="syncCardRate(this.value)">
+        <span id="cardInnerRateDisplay" style="font-size: 0.75rem; font-weight: bold; color: #fde047; min-width: 36px;">0.85x</span>
+      </div>
+    </div>
+
+    <!-- أزرار الاستماع اليدوي المتعدد -->
+    <div class="audio-actions-row">
+      <span style="font-size: 0.75rem; color: var(--muted);">استماع للكلمة:</span>
+      <button class="btn-primary btn-sm" onclick="speakModalWord()">🔊 نطق المتصفح</button>
+      <button class="btn-secondary btn-sm" onclick="playHumanDictAudio(1)">🎙️ القاموس الحر</button>
+      <button class="btn-secondary btn-sm" onclick="playHumanDictAudio(2)">🎙️ ويكيميديا</button>
+      <button class="btn-secondary btn-sm" onclick="playHumanDictAudio(3)">🇺🇸 كامبريدج (أمريكي)</button>
+      <button class="btn-secondary btn-sm" onclick="playHumanDictAudio(4)">🇬🇧 كامبريدج (بريطاني)</button>
+      <button class="btn-secondary btn-sm" onclick="playHumanDictAudio(5)">🇬🇧 أكسفورد (Oxford)</button>
+      <span id="modalAudioStatus" style="font-size: 0.75rem; color: #38bdf8; margin-right: 6px;"></span>
+    </div>
+
+  <!-- أزرار التنقل السريع الصحيحة داخل البطاقة التعليمية -->
+    <div class="btn-row" style="margin-top: 6px;">
+      <button class="btn-secondary" onclick="navigateModal(-1)">⬅️ الكلمة السابقة</button>
+      <button class="btn-secondary" onclick="navigateModal(1)">الكلمة التالية ➡️</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- نافذة منبثقة مستقلة للصق النص واستخراج الكلمات تظهر فوراً من الواجهة الرئيسية -->
+<div id="extractPromptModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100000; align-items: center; justify-content: center; padding: 14px;" onclick="if(event.target.id==='extractPromptModal')closeExtractPromptModal()">
+  <div style="background: rgba(20,20,28,0.96); border: 1px solid var(--accent); border-radius: 14px; width: 100%; max-width: 620px; padding: 18px; display: flex; flex-direction: column; gap: 10px; text-align: right; box-shadow: 0 20px 50px rgba(0,0,0,0.85);" onclick="event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+      <h3 style="font-size: 0.95rem; font-weight: bold; color: #fff;">📑 توليد برومبت استخراج الكلمات المفخخة من نص</h3>
+      <button onclick="closeExtractPromptModal()" style="background: transparent; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; min-width: auto;">✕</button>
+    </div>
+    <p style="font-size: 0.8rem; color: var(--muted);">ألصق أي مقال أو قصة أو نص بالأسفل ليتم تجهيز برومبت يطلب من الذكاء الاصطناعي استخراج أصعب الكلمات منه وجملها الأصلية:</p>
+    <textarea id="customSourceTextInput" style="height: 120px; font-size: 0.85rem;" placeholder="Paste English text here..."></textarea>
+    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+      <button class="btn-secondary btn-sm" onclick="closeExtractPromptModal()">إلغاء</button>
+      <button class="btn-primary btn-sm" onclick="copyCustomTextExtractPrompt()">📋 نسخ البرومبت المخصص للنص</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast-msg">تم النسخ بنجاح!</div>
+
+<script>
+  let rawWordList = [];
+  let currentList = [];
+  let modalActiveIndex = 0;
+  let isBlurEnabled = false;
+  let isOnlyFavorites = false;
+  let favoritesSet = new Set(JSON.parse(localStorage.getItem('glass_vocab_favs') || '[]'));
+  let availableVoices = [];
+
+  function initVoices() {
+    if (!('speechSynthesis' in window)) return;
+    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    voices.sort((a, b) => {
+      const aNat = a.name.includes('Natural') || a.name.includes('Online');
+      const bNat = b.name.includes('Natural') || b.name.includes('Online');
+      return (bNat ? 1 : 0) - (aNat ? 1 : 0);
+    });
+    availableVoices = voices;
+
+    // تعبئة قائمة الأصوات في الشريط العلوي وداخل البطاقة التعليمية معاً
+    const populateVoiceDropdown = (elementId) => {
+      const dropdown = document.getElementById(elementId);
+      if (!dropdown) return;
+      dropdown.innerHTML = '';
+      availableVoices.forEach((v, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        const isNat = v.name.includes('Natural') || v.name.includes('Online');
+        opt.textContent = `${isNat ? '⭐ ' : ''}${v.name} (${v.lang})`;
+        dropdown.appendChild(opt);
+      });
+    };
+
+    populateVoiceDropdown('modalVoiceSelect');
+    populateVoiceDropdown('cardInnerVoiceSelect');
+  }
+
+  function updateRateDisplay() {
+    const slider = document.getElementById('modalRateSlider');
+    const disp = document.getElementById('modalRateDisplay');
+    if (slider && disp) disp.textContent = `${parseFloat(slider.value).toFixed(2)}x`;
+  }
+
+  function syncCardRate(val) {
+    const num = parseFloat(val).toFixed(2);
+    const disp = document.getElementById('cardInnerRateDisplay');
+    if (disp) disp.textContent = `${num}x`;
+
+    const mainSlider = document.getElementById('modalRateSlider');
+    const mainDisp = document.getElementById('modalRateDisplay');
+    if (mainSlider) mainSlider.value = val;
+    if (mainDisp) mainDisp.textContent = `${num}x`;
+  }
+
+  function syncCardVoice(idx) {
+    const mainVoice = document.getElementById('modalVoiceSelect');
+    if (mainVoice) mainVoice.value = idx;
+  }
+
+  function openExtractPromptModal() {
+    const m = document.getElementById('extractPromptModal');
+    if (m) m.style.display = 'flex';
+  }
+
+  function closeExtractPromptModal() {
+    const m = document.getElementById('extractPromptModal');
+    if (m) m.style.display = 'none';
+  }
+
+  function copyCustomTextExtractPrompt() {
+    const text = document.getElementById('customSourceTextInput')?.value.trim();
+    if (!text) {
+      alert('يرجى لصق النص أولاً.');
+      return;
+    }
+    const count = parseInt(document.getElementById('wordCountInput')?.value, 10) || 8;
+    const promptText = `من النص المرفق، استخرج أكثر (${count}) كلمات تتسم بالصعوبة، أو الطول، أو الغرابة الصوتية (مثل أحرف صامتة، نبر غير متوقع، أو تتابعات ساكنة دقيقة).
+المعايير:
+1. استخرج "الجملة الأصلية الحقيقية الكاملة التي وردت فيها هذه الكلمة" مع ترجمتها العربية المتقنة.
+2. حدد تقطيع المقاطع الصوتية (breakdown) وموضع النبر الرئيسي (stress) والرمز الصوتي (phonetic) وفخ النطق (trap).
+
+أخرج الرد حصراً ككود JSON صالح وبدون أي مقدمات أو شروحات خارج الكود بالهيكل التالي:
+
+[
+  {
+    "word": "ExactWord",
+    "ar": "المعنى العربي",
+    "phonetic": "/IPA/",
+    "breakdown": "syl-la-ble",
+    "stress": "syl",
+    "sentence_en": "The exact full sentence from the text containing the word.",
+    "sentence_ar": "ترجمة الجملة إلى العربية.",
+    "trap": "تنبيه فخ النطق والحرف الصامت أو المعقد"
+  }
+]
+
+النص المستهدف:
+"""
+${text}
+"""`;
+
+    secureCopy(promptText, 'تم نسخ برومبت استخراج الكلمات بنجاح!');
+    closeExtractPromptModal();
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = initVoices;
+    initVoices();
+  }
+
+  function handleDomainChange() {
+    const sel = document.getElementById('domainSelect').value;
+    const wrapper = document.getElementById('customDomainInputWrapper');
+    wrapper.style.display = (sel === 'custom') ? 'block' : 'none';
+  }
+
+  function showToast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 2200);
+  }
+
+  // دعم النسخ الاحتياطي في حال تقييد الـ Clipboard API في بعض المتصفحات
+  function secureCopy(text, successMessage) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMessage);
+      }).catch(() => fallbackCopy(text, successMessage));
+    } else {
+      fallbackCopy(text, successMessage);
+    }
+  }
+
+  function fallbackCopy(text, successMessage) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast(successMessage);
+    } catch (e) {
+      alert('يرجى تحديد النص ونسخه يدوياً.');
+    }
+    document.body.removeChild(ta);
+  }
+
+  function generateAndCopyPrompt() {
+    const sel = document.getElementById('domainSelect').value;
+    let domainName = sel;
+    if (sel === 'custom') {
+      const customVal = document.getElementById('customDomainText').value.trim();
+      domainName = customVal ? `مخصص: ${customVal}` : 'عام (General Advanced Vocabulary)';
+    }
+    const count = parseInt(document.getElementById('wordCountInput').value, 10) || 8;
+
+    const promptText = `أريد قائمة دقيقة ومحكمة بعدد (${count}) كلمات إنجليزية منتقاة من مجال أو منهج: (${domainName}).
+المعايير الصارمة:
+1. اختر كلمات تتسم بالصعوبة، أو الطول، أو الغرابة الصوتية (مثل أحرف صامتة Silent Letters، نبر غير متوقع Stress Shift، أو تتابعات ساكنة دقيقة).
+2. لكل كلمة، ضع "الجملة الأصلية الحقيقية التي اشتُقت منها الكلمة" مع ترجمتها الدقيقة بالعربية.
+3. حدد تقطيع المقاطع (breakdown) ومقطع النبر الرئيسي (stress) والرمز الصوتي (phonetic) وفخ النطق (trap).
+
+أخرج الرد حصراً ككود JSON صالح وبدون أي مقدمات أو علامات إضافية خارج الكود بالهيكل التالي:
+
+[
+  {
+    "word": "anesthesia",
+    "ar": "تخدير (طبي)",
+    "phonetic": "/ˌæn.əsˈθiː.zi.ə/",
+    "breakdown": "an-es-the-sia",
+    "stress": "the",
+    "sentence_en": "The patient was placed under general anesthesia before the operation.",
+    "sentence_ar": "تم وضع المريض تحت التخدير العام قبل بدء العملية الجراحية.",
+    "trap": "النبر على مقطع (the) وصوت th يلفظ ثاءً مرققة."
+  }
+]`;
+
+    secureCopy(promptText, `تم نسخ البرومبت بنجاح لمجال: ${domainName}`);
+  }
+
+  function loadSampleContextData() {
+    const sample = [
+      {
+        "word": "anesthesia",
+        "ar": "تخدير (طبي)",
+        "phonetic": "/ˌæn.əsˈθiː.zi.ə/",
+        "breakdown": "an-es-the-sia",
+        "stress": "the",
+        "sentence_en": "The patient was placed under general anesthesia before the operation.",
+        "sentence_ar": "تم وضع المريض تحت التخدير العام قبل بدء العملية الجراحية.",
+        "trap": "النبر على مقطع (the) وصوت th يلفظ ثاءً مرققة."
+      },
+      {
+        "word": "subtle",
+        "ar": "خفي / دقيق",
+        "phonetic": "/ˈsʌt.əl/",
+        "breakdown": "sub-tle",
+        "stress": "sub",
+        "sentence_en": "There was a subtle difference in her tone that made everyone listen closely.",
+        "sentence_ar": "كان هناك اختلاف خفي ودقيق في نبرتها جعل الجميع يصغي بانتباه.",
+        "trap": "حرف (b) صامت لا يُنطق أبداً؛ تلفظ 'سَتِل'."
+      },
+      {
+        "word": "colonel",
+        "ar": "عقيد (رتبة عسكرية)",
+        "phonetic": "/ˈkɜː.nəl/",
+        "breakdown": "colo-nel",
+        "stress": "colo",
+        "sentence_en": "The colonel ordered the regiment to hold their defensive positions until dawn.",
+        "sentence_ar": "أمر العقيد الكتيبة بالثبات في مواقعها الدفاعية حتى الفجر.",
+        "trap": "لا يُنطق حرف اللام إطلاقاً؛ الكلمة تلفظ كأنها Kernel."
+      },
+      {
+        "word": "mischievous",
+        "ar": "مشاكس / عابث",
+        "phonetic": "/ˈmɪs.tʃɪ.vəs/",
+        "breakdown": "mis-chie-vous",
+        "stress": "mis",
+        "sentence_en": "The mischievous little puppy hid all the slippers under the sofa.",
+        "sentence_ar": "قام الجرو المشاكس بإخفاء جميع النعال تحت الأريكة.",
+        "trap": "الكلمة 3 مقاطع فقط؛ لا تضف ياء إضافية بعد حرف الـ v."
+      },
+      {
+        "word": "comfortable",
+        "ar": "مريح",
+        "phonetic": "/ˈkʌm.fət.ə.bəl/",
+        "breakdown": "com-fort-a-ble",
+        "stress": "com",
+        "sentence_en": "She sat in a comfortable armchair by the window to read her novel.",
+        "sentence_ar": "جلست في كرسي مريح بجوار النافذة لتقرأ روايتها.",
+        "trap": "النبر على (com) والمقاطع الأخيرة تخفف إلى 'فتبل' وتجنب نطق كلمة table."
+      }
+    ];
+    document.getElementById('jsonInput').value = JSON.stringify(sample, null, 2);
+    parseAndMountWords();
+  }
+
+  function parseAndMountWords() {
+    let raw = document.getElementById('jsonInput').value.trim();
+    if (!raw) return;
+    raw = raw.replace(/```json|```/g, '').replace(/\/\/.*$/gm, '');
+    try {
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data) || data.length === 0) {
+        alert('يجب أن يكون ملف JSON عبارة عن مصفوفة كلمات صحيحة.');
+        return;
+      }
+      rawWordList = data;
+      filterList();
+      showToast(`تم تثبيت ${rawWordList.length} كلمة بنجاح!`);
+    } catch (e) {
+      alert('خطأ في صيغة كود JSON. تأكد من سلامة الأقواس والفواصل.');
+    }
+  }
+
+  function filterList() {
+    if (isOnlyFavorites) {
+      currentList = rawWordList.filter(item => favoritesSet.has(item.word.toLowerCase()));
+    } else {
+      currentList = [...rawWordList];
+    }
+    document.getElementById('totalWordsBadge').textContent = currentList.length;
+    updateFavCountBadge();
+    renderGrid();
+  }
+
+  function updateFavCountBadge() {
+    document.getElementById('favCount').textContent = favoritesSet.size;
+  }
+
+  function toggleFavoritesOnly() {
+    isOnlyFavorites = !isOnlyFavorites;
+    filterList();
+  }
+
+  function toggleWordFav(word, event) {
+    if (event) event.stopPropagation();
+    const clean = word.toLowerCase();
+    if (favoritesSet.has(clean)) {
+      favoritesSet.delete(clean);
+    } else {
+      favoritesSet.add(clean);
+    }
+    localStorage.setItem('glass_vocab_favs', JSON.stringify(Array.from(favoritesSet)));
+    filterList();
+    updateModalFavButtonState();
+  }
+
+  function toggleCurrentWordFav() {
+    if (!currentList[modalActiveIndex]) return;
+    toggleWordFav(currentList[modalActiveIndex].word);
+  }
+
+  function updateModalFavButtonState() {
+    if (!currentList[modalActiveIndex]) return;
+    const clean = currentList[modalActiveIndex].word.toLowerCase();
+    const btn = document.getElementById('modalFavBtn');
+    if (favoritesSet.has(clean)) {
+      btn.textContent = '⭐ في المفضلة';
+      btn.style.color = 'var(--star)';
+      btn.style.borderColor = 'var(--star)';
+    } else {
+      btn.textContent = '☆ إضافة للمفضلة';
+      btn.style.color = 'var(--text)';
+      btn.style.borderColor = 'var(--glass-border)';
+    }
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('wordsContainer');
+    if (currentList.length === 0) {
+      grid.innerHTML = '<span style="color: var(--muted); font-size: 0.8rem;">لا توجد كلمات مطابقة حالياً.</span>';
+      return;
+    }
+
+    grid.innerHTML = currentList.map((item, idx) => {
+      const isFav = favoritesSet.has(item.word.toLowerCase());
+      return `
+        <div class="word-chip" onclick="openModalAt(${idx})">
+          <div style="display:flex; flex-direction:column; gap:2px; text-align:right;">
+            <span style="font-weight:bold; color:#93c5fd; direction:ltr; text-align:left; font-size:1.05rem;">${item.word}</span>
+            <span style="font-size:0.78rem; color:var(--muted);">${item.ar}</span>
+          </div>
+          <span class="chip-star ${isFav ? 'starred' : ''}" onclick="toggleWordFav('${item.word}', event)" title="تمييز بنجمة">★</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // فتح البطاقة المنبثقة العائمة
+  function openModalAt(idx) {
+    if (!currentList || currentList.length === 0) {
+      alert('يرجى استيراد الكلمات أولاً.');
+      return;
+    }
+    if (idx < 0) idx = 0;
+    if (idx >= currentList.length) idx = currentList.length - 1;
+    modalActiveIndex = idx;
+
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.add('active');
+    renderModalCard();
+  }
+
+  function closeModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.remove('active');
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target.id === 'modalOverlay') closeModal();
+  }
+
+  function renderModalCard() {
+    const item = currentList[modalActiveIndex];
+    if (!item) return;
+
+    document.getElementById('modalCounter').textContent = `الكلمة: ${modalActiveIndex + 1} / ${currentList.length}`;
+    document.getElementById('modalWordEn').textContent = item.word;
+    document.getElementById('modalWordAr').textContent = item.ar;
+    document.getElementById('modalPhonetic').textContent = item.phonetic || `/${item.word}/`;
+    document.getElementById('modalTrap').textContent = item.trap || 'انتبه لمخارج الحروف والتنغيم.';
+    document.getElementById('modalAudioStatus').textContent = '';
+
+    const breakdown = item.breakdown || item.word;
+    const stress = item.stress || '';
+    if (stress && breakdown.includes(stress)) {
+      const parts = breakdown.split(stress);
+      document.getElementById('modalBreakdown').innerHTML = `${parts[0]}<span class="stress-part">${stress}</span>${parts[1]}`;
+    } else {
+      document.getElementById('modalBreakdown').textContent = breakdown;
+    }
+
+    const sentenceEn = item.sentence_en || item.word;
+    const regex = new RegExp(`(${item.word})`, 'gi');
+    const highlightedSentence = sentenceEn.replace(regex, `<span class="highlight-target">$1</span>`);
+
+    document.getElementById('modalSentenceEn').innerHTML = highlightedSentence;
+    document.getElementById('modalSentenceAr').textContent = item.sentence_ar || item.ar;
+
+    applyBlurState();
+    updateModalFavButtonState();
+
+    // مزامنة الصوت المحدد داخل البطاقة تلقائياً عند فتحها
+    const mainVoice = document.getElementById('modalVoiceSelect');
+    const cardVoice = document.getElementById('cardInnerVoiceSelect');
+    if (mainVoice && cardVoice && cardVoice.options.length === 0) {
+      cardVoice.innerHTML = mainVoice.innerHTML;
+    }
+    if (mainVoice && cardVoice) {
+      cardVoice.value = mainVoice.value;
+    }
+  }
+
+  function navigateModal(direction) {
+    const next = modalActiveIndex + direction;
+    if (next >= 0 && next < currentList.length) {
+      modalActiveIndex = next;
+      renderModalCard();
+    }
+  }
+
+  function toggleBlurTranslation() {
+    isBlurEnabled = !isBlurEnabled;
+    applyBlurState();
+  }
+
+  function applyBlurState() {
+    const wordAr = document.getElementById('modalWordAr');
+    const sentAr = document.getElementById('modalSentenceAr');
+    if (isBlurEnabled) {
+      wordAr.classList.add('blurred');
+      sentAr.classList.add('blurred');
+    } else {
+      wordAr.classList.remove('blurred');
+      sentAr.classList.remove('blurred');
+    }
+  }
+
+  // التحكم الصوتي اليدوي التام مع قراءة الناطق والسرعة من داخل البطاقة مباشرة
+  function speakModalWord(overrideRate = null) {
+    if (!('speechSynthesis' in window) || !currentList[modalActiveIndex]) return;
+    window.speechSynthesis.cancel();
+    const clean = currentList[modalActiveIndex].word.replace(/[^a-zA-Z]/g, '');
+    const utter = new SpeechSynthesisUtterance(clean);
+
+    const innerVoiceSel = document.getElementById('cardInnerVoiceSelect');
+    const mainVoiceSel = document.getElementById('modalVoiceSelect');
+    const selectedVoiceIdx = innerVoiceSel?.value || mainVoiceSel?.value;
+
+    if (selectedVoiceIdx && availableVoices[selectedVoiceIdx]) {
+      utter.voice = availableVoices[selectedVoiceIdx];
+    } else if (availableVoices.length > 0) {
+      utter.voice = availableVoices[0];
+    }
+
+    const innerSlider = document.getElementById('cardInnerRateSlider');
+    const mainSlider = document.getElementById('modalRateSlider');
+    const currentRate = innerSlider ? parseFloat(innerSlider.value) : (mainSlider ? parseFloat(mainSlider.value) : 0.85);
+
+    utter.rate = overrideRate !== null ? overrideRate : currentRate;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function speakModalSentence() {
+    if (!('speechSynthesis' in window) || !currentList[modalActiveIndex]) return;
+    window.speechSynthesis.cancel();
+    const sentence = currentList[modalActiveIndex].sentence_en || currentList[modalActiveIndex].word;
+    const utter = new SpeechSynthesisUtterance(sentence);
+    if (availableVoices.length > 0) utter.voice = availableVoices[0];
+    utter.rate = 0.88;
+    window.speechSynthesis.speak(utter);
+  }
+
+  async function playHumanDictAudio(srcIdx) {
+    const item = currentList[modalActiveIndex];
+    if (!item) return;
+    const clean = item.word.toLowerCase().replace(/[^a-z]/g, '');
+    const status = document.getElementById('modalAudioStatus');
+    status.textContent = 'طلب التسجيل...';
+
+    const fallback = (msg) => {
+      status.textContent = msg || 'غير متوفر بالمصدر، تم التحويل للمتصفح';
+      speakModalWord();
+    };
+
+    let url = null;
+    try {
+      if (srcIdx === 1) {
+        // Free Dictionary API
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${clean}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data[0]?.phonetics) {
+            for (let p of data[0].phonetics) {
+              if (p.audio && p.audio.endsWith('.mp3')) { url = p.audio; break; }
+            }
+          }
+        }
+      } else if (srcIdx === 2) {
+        // Wikimedia
+        url = `https://commons.wikimedia.org/wiki/Special:FilePath/En-us-${clean}.ogg`;
+      } else if (srcIdx === 3) {
+        // Cambridge US
+        url = `https://dictionary.cambridge.org/media/english/us_pron/${clean.charAt(0)}/${clean.slice(0,3)}/${clean.slice(0,5)}/${clean}.mp3`;
+      } else if (srcIdx === 4) {
+        // Cambridge UK
+        url = `https://dictionary.cambridge.org/media/english/uk_pron/${clean.charAt(0)}/${clean.slice(0,3)}/${clean.slice(0,5)}/${clean}.mp3`;
+      } else if (srcIdx === 5) {
+        // Oxford Learner's Dictionary
+        url = `https://www.oxfordlearnersdictionaries.com/media/english/us_pron/${clean.charAt(0)}/${clean.slice(0,3)}/${clean.slice(0,5)}/${clean}__us_1.mp3`;
+      }
+
+      if (url) {
+        const a = new Audio(url);
+        const slider = document.getElementById('modalRateSlider');
+        a.playbackRate = slider ? parseFloat(slider.value) : 1.0;
+
+        a.oncanplaythrough = () => { status.textContent = '✔️ تم التشغيل من المصدر'; a.play().catch(() => fallback()); };
+        a.onerror = () => fallback();
+      } else {
+        fallback();
+      }
+    } catch (_) {
+      fallback();
+    }
+  }
+
+  // دعم اختصارات لوحة المفاتيح
+  document.addEventListener('keydown', (e) => {
+    const overlay = document.getElementById('modalOverlay');
+    if (!overlay.classList.contains('active')) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      navigateModal(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      navigateModal(-1);
+    } else if (e.key === 'Escape') {
+      closeModal();
+    } else if (e.key === ' ') {
+      e.preventDefault();
+      speakModalWord(1.0);
+    }
+  });
+
+  updateFavCountBadge();
+</script>
+
+</body>
+</html>
