@@ -480,9 +480,31 @@
 
   <!-- شبكة الكلمات الرئيسية -->
   <div class="glass-panel">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h2>فهرس الكلمات (<span id="totalWordsBadge">0</span> مفردة)</h2>
-      <span style="font-size: 0.75rem; color: var(--muted);">انقر على أي بطاقة لفتحها بشكل منبثق</span>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <h2>فهرس الكلمات (<span id="totalWordsBadge">0</span> مفردة)</h2>
+        <button class="btn-secondary btn-sm" onclick="copyExtractedWordsOnly()" title="نسخ الكلمات الإنجليزية المستخرجة وحدها">
+          📋 نسخ الكلمات المستخرجة
+        </button>
+      </div>
+
+      <!-- أدوات إنشاء القطعة القرائية بالذكاء الاصطناعي -->
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+        <select id="passageConstraintSelect" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
+          <option value="strict">الالتزام التام بهذه الكلمات فقط</option>
+          <option value="flexible">السماح بإضافة كلمات ومفردات أخرى</option>
+        </select>
+
+        <select id="readingDurationSelect" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
+          <option value="0.5">مدة القراءة: نصف دقيقة (~70 كلمة)</option>
+          <option value="1" selected>مدة القراءة: دقيقة (~140 كلمة)</option>
+          <option value="2">مدة القراءة: دقيقتان (~280 كلمة)</option>
+        </select>
+
+        <button class="btn-primary btn-sm" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none;" onclick="copyStoryPromptFromWords()">
+          ✨ برومبت إنشاء قطعة قرائية
+        </button>
+      </div>
     </div>
     <div id="wordsContainer" class="words-grid">
       <span style="color: var(--muted); font-size: 0.8rem;">لا توجد كلمات محملة حالياً. ألصق كود JSON أو حمل العينة أعلاه.</span>
@@ -1614,6 +1636,63 @@ ${text}
       speakModalWord(1.0);
     }
   });
+
+  // نسخ الكلمات المستخرجة وحدها فقط كنص نقي
+  function copyExtractedWordsOnly() {
+    const list = (currentList && currentList.length > 0) ? currentList : rawWordList;
+    if (!list || list.length === 0) {
+      alert('لا توجد كلمات مستخرجة لنسخها.');
+      return;
+    }
+    const wordsOnly = list.map(item => item.word.trim()).filter(Boolean).join('\n');
+    secureCopy(wordsOnly, `تم نسخ (${list.length}) كلمة مستخرجة بنجاح!`);
+  }
+
+  // توليد برومبت إنشاء قطعة بالذكاء الاصطناعي بناءً على القوائم المنسدلة
+  function copyStoryPromptFromWords() {
+    const list = (currentList && currentList.length > 0) ? currentList : rawWordList;
+    if (!list || list.length === 0) {
+      alert('يرجى استيراد وتثبيت الكلمات أولاً لتوليد القطعة.');
+      return;
+    }
+
+    const wordsArray = list.map(item => item.word.trim()).filter(Boolean);
+    const wordsStr = wordsArray.join(', ');
+
+    const constraintVal = document.getElementById('passageConstraintSelect')?.value || 'strict';
+    const durationVal = parseFloat(document.getElementById('readingDurationSelect')?.value || '1');
+
+    let targetWordsCount = 'حوالي 130 - 150 كلمة (قراءة دقيقة واحدة)';
+    if (durationVal === 0.5) {
+      targetWordsCount = 'حوالي 60 - 75 كلمة (قراءة نصف دقيقة)';
+    } else if (durationVal === 2) {
+      targetWordsCount = 'حوالي 260 - 300 كلمة (قراءة دقيقتين)';
+    }
+
+    let constraintText = '';
+    if (constraintVal === 'strict') {
+      constraintText = `1. الالتزام الصارم بمفردات القائمة المحددة وتجنب إدخال مفردات معقدة خارجها قدر الإمكان، مع توظيف جميع الكلمات المستهدفة توظيفاً سياقياً حقيقياً وطبيعياً.`;
+    } else {
+      constraintText = `1. توظيف جميع الكلمات المستهدفة أدناه بشكل أساسي، مع كامل الحرية في إضافة مفردات إضافية غنية وتراكيب متقدمة لخدمة الحبكة والمعنى.`;
+    }
+
+    const promptText = `أنت خبير تربوي ومتخصص في تدريس اللغة الإنجليزية وصناعة المحتوى القرائي التفاعلي.
+المطلوب: كتابة قطعة قرائية إنجليزية جذابة ومترابطة (Engaging Reading Passage) بالمعايير التالية:
+
+المعايير المحددة:
+${constraintText}
+2. مدة القراءة المستهدفة: ${durationVal} دقيقة (طول النص: ${targetWordsCount}).
+3. الكلمات المستهدفة الواجب تضمينها وإبرازها بخط عريض (**bold**) داخل النص:
+[ ${wordsStr} ]
+
+المخرجات المطلوبة منك:
+- عنوان مشوق للقطعة (Catchy Title).
+- نص القطعة باللغة الإنجليزية مع وضع الكلمات المستهدفة بخط عريض (**Target Word**).
+- ترجمة عربية دقيقة وسلسة للنص كاملاً.
+- مسرد سريع بالأسفل يوضح معنى كل كلمة مستهدفة وسياقها في النص.`;
+
+    secureCopy(promptText, 'تم نسخ برومبت إنشاء القطعة القرائية بنجاح!');
+  }
 
   updateFavCountBadge();
 </script>
