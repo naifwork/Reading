@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
+<html lang="ar" dir="rtl"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Glass Context Vocabulary Lab | معمل المفردات الزجاجي</title>
@@ -410,8 +409,8 @@
   <div class="glass-panel">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div>
-        <h1>معمل المفردات الزجاجي بالسياق الأصلي</h1>
-        <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات الزجاجية المنبثقة، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
+        <h1>معمل المفردات&nbsp;</h1>
+        <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
       </div>
       <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
         <button class="btn-secondary btn-sm" style="border-color: #818cf8; color: #c7d2fe; background: rgba(99, 102, 241, 0.15);" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات والرموز (IPA)</button>
@@ -424,15 +423,15 @@
       <div>
         <label style="font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 3px;">المجال أو المنهج المستهدف:</label>
         <select id="domainSelect" onchange="handleDomainChange()">
-          <option value="عام (General Challenging Vocabulary)" selected>عام (General Challenging Vocabulary)</option>
+          <option value="عام (General Challenging Vocabulary)" selected="">عام (General Challenging Vocabulary)</option>
           <option value="Super Goal 1 (Middle School English)">مناهج التعليم: Super Goal 1</option>
-          <option value="Super Goal 2 & 3">مناهج التعليم: Super Goal 2 & 3</option>
+          <option value="Super Goal 2 &amp; 3">مناهج التعليم: Super Goal 2 &amp; 3</option>
           <option value="Mega Goal (Secondary Stage)">مناهج الثانوي: Mega Goal</option>
-          <option value="Medical & Healthcare Terminology">المصطلحات الطبية والصحية</option>
-          <option value="Technology, AI & Programming">الذكاء الاصطناعي وهندسة البرمجيات</option>
-          <option value="Business, Economics & Finance">إدارة الأعمال والمالية</option>
-          <option value="Academic TOEFL & IELTS Academic List">الأكاديمي: اختبارات التوفل والآيلتس</option>
-          <option value="Everyday Tricky Phrasal Verbs & Slang">العبارات الشائعة والأفعال المركبة الخادعة</option>
+          <option value="Medical &amp; Healthcare Terminology">المصطلحات الطبية والصحية</option>
+          <option value="Technology, AI &amp; Programming">الذكاء الاصطناعي وهندسة البرمجيات</option>
+          <option value="Business, Economics &amp; Finance">إدارة الأعمال والمالية</option>
+          <option value="Academic TOEFL &amp; IELTS Academic List">الأكاديمي: اختبارات التوفل والآيلتس</option>
+          <option value="Everyday Tricky Phrasal Verbs &amp; Slang">العبارات الشائعة والأفعال المركبة الخادعة</option>
           <option value="custom">مخصص (اكتب مصدرك بنفسك)...</option>
         </select>
 
@@ -497,7 +496,7 @@
 
         <select id="readingDurationSelect" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
           <option value="0.5">مدة القراءة: نصف دقيقة (~70 كلمة)</option>
-          <option value="1" selected>مدة القراءة: دقيقة (~140 كلمة)</option>
+          <option value="1" selected="">مدة القراءة: دقيقة (~140 كلمة)</option>
           <option value="2">مدة القراءة: دقيقتان (~280 كلمة)</option>
         </select>
 
@@ -745,7 +744,7 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/l/ & /ɫ/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/l/ &amp; /ɫ/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('light', 'feel', 'milk')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">اللام الخفيفة والمفخمة (L)</div>
@@ -763,7 +762,7 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/p/ & /b/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/p/ &amp; /b/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('pen', 'ben', 'copy')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">الباء المهموسة والجهورية</div>
@@ -772,16 +771,16 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/t/ & /d/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/t/ &amp; /d/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('time', 'door', 'little')">🔊 اسمع</button>
             </div>
-            <div style="font-weight: bold; color: #fff;">التاء والدال (T & D)</div>
+            <div style="font-weight: bold; color: #fff;">التاء والدال (T &amp; D)</div>
             <div style="font-size: 0.75rem; color: #a1a1aa;">طرف اللسان على اللثة العلوية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>t</b>ime, <b>d</b>oor</span></div>
           </div>
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/k/ & /g/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/k/ &amp; /g/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('cat', 'good', 'back')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">الكاف والجيم غير المعطشة</div>
@@ -790,7 +789,7 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/f/ & /v/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/f/ &amp; /v/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('fan', 'van', 'live')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">الفاء وصوت الـ V المهتز</div>
@@ -799,7 +798,7 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/s/ & /z/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/s/ &amp; /z/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('sun', 'zoo', 'buzz')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">السين والزاي (صفير)</div>
@@ -808,7 +807,7 @@
 
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/m/ & /n/</span>
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/m/ &amp; /n/</span>
               <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('man', 'no', 'name')">🔊 اسمع</button>
             </div>
             <div style="font-weight: bold; color: #fff;">الميم والنون الأنفية العادية</div>
@@ -1697,5 +1696,5 @@ ${constraintText}
   updateFavCountBadge();
 </script>
 
-</body>
-</html>
+
+</body></html>
