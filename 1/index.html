@@ -413,7 +413,10 @@
         <h1>معمل المفردات الزجاجي بالسياق الأصلي</h1>
         <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات الزجاجية المنبثقة، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
       </div>
-      <button class="btn-secondary btn-sm" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
+      <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <button class="btn-secondary btn-sm" style="border-color: #818cf8; color: #c7d2fe; background: rgba(99, 102, 241, 0.15);" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات والرموز (IPA)</button>
+        <button class="btn-secondary btn-sm" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
+      </div>
     </div>
 
     <!-- شريط الخيارات: عام / مخصص / عدد الكلمات -->
@@ -596,6 +599,443 @@
 </div>
 
 <div id="toast" class="toast-msg">تم النسخ بنجاح!</div>
+
+<!-- نافذة موسوعة نطق الرموز الصوتية الكاملة والشاملة (44 صوتاً + الرموز الخاصة) -->
+<div id="phoneticGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 4, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='phoneticGuideModal')togglePhoneticGuideModal()">
+  <div style="background: #14141a; border: 1px solid rgba(99, 102, 241, 0.45); border-radius: 18px; width: 100%; max-width: 860px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
+    
+    <!-- شريط الرأس -->
+    <div style="background: #1a1a24; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.25rem;">📖</span>
+        <div>
+          <h3 style="font-weight: 800; color: #fff; font-size: 1.05rem;">الموسوعة الشاملة للأصوات والرموز الصوتية الإنجليزية (44 صوتاً - IPA)</h3>
+          <p style="font-size: 0.75rem; color: #a1a1aa; margin: 0;">تشريح صوتي كامل مع زر نطق لكل صوت، وأمثلة نطقية واضحة ومقارنات بالعربية</p>
+        </div>
+      </div>
+      <button onclick="togglePhoneticGuideModal()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; padding: 0; min-width: auto;">✕</button>
+    </div>
+
+    <!-- المحتوى القابل للتمرير -->
+    <div style="padding: 16px; overflow-y: auto; font-size: 0.83rem; line-height: 1.6; color: #e4e4e7; display: flex; flex-direction: column; gap: 16px;">
+      
+      <!-- إرشاد سريع للربط الذهني -->
+      <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-right: 4px solid #6366f1; padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; color: #c7d2fe;">
+        💡 <strong>الأبجدية الصوتية الكاملة:</strong> تضم الإنجليزية 44 صوتاً أساسياً مقسمة إلى ساكنة (24 صوتاً)، علة أحادية (12 صوتاً)، وعلة مزدوجة (8 أصوات)، بالإضافة لرموز الطلاقة الصوتية (Flap T و Glottal Stop). انقر على <strong>🔊 اسمع</strong> في أي بطاقة لسماع مخارج الحروف فوراً.
+      </div>
+
+      <!-- 1. الحروف الساكنة الكاملة (24 Consonants) -->
+      <div>
+        <div style="font-weight: 800; color: #60a5fa; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>🔹</span><span>الحروف الساكنة الكاملة (24 Consonants):</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+          
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/θ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('thin', 'think', 'thought')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الثاء العربي (ث)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">طرف اللسان بين الأسنان؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>th</b>in, <b>th</b>ink</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/ð/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('this', 'mother', 'breathe')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الذال العربي (ذ)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">طرف اللسان مع اهتزاز الأوتار؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>th</b>is, mo<b>th</b>er</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/ʃ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('ship', 'nation', 'chef')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الشين العربي (ش)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">يظهر في sh وفي ti/ci؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>sh</b>ip, na<b>ti</b>on</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/tʃ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('chair', 'church', 'future')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت مركب (تـش - Ch)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">انفجار تائي متبوع بشين؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>ch</b>air, fu<b>tu</b>re</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/ʒ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('vision', 'measure', 'garage')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">جيم معطشة رقيقة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">صوت رخو كالجيم بدون قلقلة؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;">vi<b>si</b>on, plea<b>su</b>re</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/dʒ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('job', 'bridge', 'educate')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الجيم الفصيحة القوية (دج)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تُقرأ بدال خفيفة تسبق الجيم؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>j</b>ob, bri<b>dge</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/ŋ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('sing', 'long', 'bank')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">النون الأنفية الرخوة (الغُنّة)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">صوت يخرج من الخيشوم دون نطق الجيم؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;">si<b>ng</b>, lo<b>ng</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/j/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('yes', 'yellow', 'union')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الياء الخالصة (ي)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">صوت شبه علة متموج؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>y</b>es, un<b>i</b>on</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/w/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('wet', 'water', 'quick')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الواو الخالصة (و)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">استدارة تامة للشفاه؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>w</b>et, q<b>u</b>ick</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/r/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('red', 'run', 'right')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الراء الإنجليزية المرجعة (R)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">طرف اللسان لا يلمس سقف الحلق؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>r</b>ed, <b>r</b>un</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/l/ & /ɫ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('light', 'feel', 'milk')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">اللام الخفيفة والمفخمة (L)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">خفيفة بالبداية ومفخمة بالنهاية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>l</b>ight, fee<b>l</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/h/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hat', 'home', 'ahead')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حرف الهاء العربي (هـ)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">زفير حنجري سلس؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>h</b>at, <b>h</b>ome</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/p/ & /b/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('pen', 'ben', 'copy')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الباء المهموسة والجهورية</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">الـ P مع نفخة هواء والـ B باهتزاز؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>p</b>en, <b>b</b>en</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/t/ & /d/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('time', 'door', 'little')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">التاء والدال (T & D)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">طرف اللسان على اللثة العلوية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>t</b>ime, <b>d</b>oor</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/k/ & /g/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('cat', 'good', 'back')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الكاف والجيم غير المعطشة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">أقصى اللسان؛ الـ G كالجيم المصرية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>c</b>at, <b>g</b>ood</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/f/ & /v/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('fan', 'van', 'live')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الفاء وصوت الـ V المهتز</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">الأسنان العلوية على الشفة السفلية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>f</b>an, <b>v</b>an</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/s/ & /z/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('sun', 'zoo', 'buzz')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">السين والزاي (صفير)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">الـ S مهموس والـ Z باهتزاز الحبال؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>s</b>un, <b>z</b>oo</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900;">/m/ & /n/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('man', 'no', 'name')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الميم والنون الأنفية العادية</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تطابق تام مع العربية؛ مثل: <span style="direction: ltr; display: inline-block; color: #fde047;"><b>m</b>an, <b>n</b>o</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 2. أصوات العلة الأحادية (12 Monophthongs) -->
+      <div>
+        <div style="font-weight: 800; color: #fde047; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>🔸</span><span>أصوات العلة الأحادية القصيرة والطويلة (12 Monophthongs):</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+          
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ə/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('about', 'banana', 'teacher')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">الشوا (Schwa) الأهم بالإنجليزية</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">فتحة مهملة وخافتة بالمقاطع غير المشددة؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;"><b>a</b>bout, teach<b>er</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/iː/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('see', 'meet', 'believe')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">كسرة ممدودة طويلة (ياء مد)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">ابتسامة شفتين وإطالة؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">s<b>ee</b>, m<b>ee</b>t</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ɪ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('sit', 'hit', 'gym')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">كسرة خاطفة مقبوضة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">بين الفتحة والكسرة؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">s<b>i</b>t, h<b>i</b>t</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/e/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('bed', 'red', 'set')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">فتحة مائلة للكسر (إي خفيفة)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">قصيرة دون إمالة تامة؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">b<b>e</b>d, r<b>e</b>d</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/æ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('cat', 'bad', 'apple')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ألف مفتوحة عريضة ومفخمة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">فتح الفك السفلي تماماً؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">c<b>a</b>t, b<b>a</b>d</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ʌ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('cup', 'love', 'much')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">فتحة حنجرية قصيرة قوية</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">همزة فتحة خاطفة من الحلق؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">c<b>u</b>p, l<b>o</b>ve</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ɑː/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('father', 'car', 'hard')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ألف مد مفخمة وطويلة (آ)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">من أقصى الحلق مع تفخيم؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">f<b>a</b>ther, c<b>a</b>r</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ɒ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hot', 'box', 'not')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">واو قصيرة مفتوحة الفم (UK)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">شائعة بالبريطاني؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">h<b>o</b>t, b<b>o</b>x</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ɔː/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('door', 'saw', 'walk')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">واو مفخمة طويلة ممتدة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">ضمة عميقة ممدودة؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">d<b>oor</b>, s<b>aw</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ʊ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('book', 'put', 'good')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ضمة خفيفة مقبوضة خاطفة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">قصيرة دون مد؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">b<b>oo</b>k, p<b>u</b>t</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/uː/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('too', 'blue', 'school')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ضمة ممدودة طويلة (واو مد)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تكوير الشفاه وإطالة الزمن؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">t<b>oo</b>, bl<b>ue</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #facc15; font-weight: 900;">/ɜː/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('bird', 'work', 'nurse')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت العلة المشبع المقترن بالـ R</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مركز الفم مشدود مع نغمة راء؛ مثل: <span style="direction: ltr; display: inline-block; color: #86efac;">b<b>ir</b>d, w<b>or</b>k</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 3. الأصوات المزدوجة (8 Diphthongs) -->
+      <div>
+        <div style="font-weight: 800; color: #c084fc; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>🟣</span><span>الأصوات المركبة المزدوجة (8 Diphthongs):</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+          
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/eɪ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('day', 'make', 'rain')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (إيْ) - حركة ممتدة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">ينتقل من فتحة لكسرة؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">d<b>ay</b>, m<b>a</b>ke</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/aɪ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('my', 'time', 'high')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (آي) الصريح</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">انتقال من فتحة عريضة للياء؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">m<b>y</b>, t<b>i</b>me</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/ɔɪ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('boy', 'coin', 'voice')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (أوي) المزدوج</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">من واو مفخمة لكسرة؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">b<b>oy</b>, c<b>oi</b>n</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/aʊ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('now', 'house', 'out')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (آو) الذي ينتهي بضمة</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">انتقال من فتحة لضم الشفاه؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">n<b>ow</b>, h<b>ou</b>se</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/oʊ/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('go', 'home', 'boat')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (أُو) الانسيابي الممدود</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">شائع في الأمريكي؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">g<b>o</b>, h<b>o</b>me</span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/ɪə/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('near', 'hear', 'clear')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (إِيـرْ) الممتد</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">كسرة تنتهي بشوا خفيفة؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">n<b>ear</b>, h<b>ear</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/eə/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hair', 'care', 'there')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (إيـرْ مفتوحة)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">فتحة لينة تنتهي بشوا؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">h<b>air</b>, c<b>are</b></span></div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900;">/ʊə/</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('pure', 'tour', 'cure')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صوت (أُو-ر) المزدوج</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">ضمة خفيفة تنتهي بشوا؛ مثل: <span style="direction: ltr; display: inline-block; color: #d8b4fe;">p<b>ure</b>, t<b>our</b></span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4. رموز الطلاقة الصوتية والنبر -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+        
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900;">[ɾ] Flap T</span>
+            <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('water', 'better', 'city')">🔊 اسمع</button>
+          </div>
+          <div style="font-weight: bold; color: #fff; font-size: 0.8rem;">نقرة التاء الأمريكية (الراء الخاطفة)</div>
+          <div style="font-size: 0.75rem; color: #a1a1aa;">سر الانطلاق في القراءة؛ عندما تقع T بين حركتي علة تلفظ راءً خاطفة؛ مثل: <span style="direction: ltr; display: inline-block; color: #6ee7b7;">wa<b>t</b>er, ci<b>t</b>y</span></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-family: monospace; font-size: 1.15rem; color: #f87171; font-weight: 900;">[ʔ] Glottal Stop</span>
+            <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('button', 'fitness', 'football')">🔊 اسمع</button>
+          </div>
+          <div style="font-weight: bold; color: #fff; font-size: 0.8rem;">الهمزة الحنجرية (قطع الصوت المفاجئ)</div>
+          <div style="font-size: 0.75rem; color: #a1a1aa;">حبس النفس في الحنجرة بدلاً من نطق التاء؛ شائعة بالبريطاني؛ مثل: <span style="direction: ltr; display: inline-block; color: #fca5a5;">bu<b>tt</b>on, fi<b>t</b>ness</span></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;">
+          <div style="font-weight: bold; color: #a78bfa; margin-bottom: 4px; font-size: 0.82rem;">⚡ علامات النبر (Stress Marks):</div>
+          <div style="font-size: 0.75rem; color: #d4d4d8;">
+            • <code>ˈ</code> <strong>النبر الرئيسي (Primary):</strong> المقطع التالي يُنطق بقوة وزمن أطول.<br>
+            • <code>ˌ</code> <strong>النبر الثانوي (Secondary):</strong> ارتكاز صوتي خفيف ممهّد.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- أسفل النافذة -->
+    <div style="background: #1a1a24; padding: 10px 18px; text-align: left; border-top: 1px solid rgba(255,255,255,0.08);">
+      <button class="btn-secondary btn-sm" onclick="togglePhoneticGuideModal()">إغلاق الموسوعة</button>
+    </div>
+
+  </div>
+</div>
 
 <script>
   let rawWordList = [];
@@ -1046,13 +1486,61 @@ ${text}
     window.speechSynthesis.speak(utter);
   }
 
+  function togglePhoneticGuideModal() {
+    const m = document.getElementById('phoneticGuideModal');
+    if (!m) return;
+    const isHidden = (m.style.display === 'none' || m.style.display === '');
+    m.style.display = isHidden ? 'flex' : 'none';
+    if (!isHidden && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  // دالة متقدمة لنطق أمثلة الرموز الصوتية بالصوت والسرعة المختارة
+  function speakPhoneticSample(...words) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const text = words.join(', ');
+    const utter = new SpeechSynthesisUtterance(text);
+
+    const mainVoice = document.getElementById('modalVoiceSelect');
+    const cardVoice = document.getElementById('cardInnerVoiceSelect');
+    const voiceIdx = cardVoice?.value || mainVoice?.value;
+
+    if (voiceIdx && availableVoices[voiceIdx]) {
+      utter.voice = availableVoices[voiceIdx];
+    } else if (availableVoices.length > 0) {
+      utter.voice = availableVoices[0];
+    }
+
+    const slider = document.getElementById('modalRateSlider');
+    utter.rate = slider ? parseFloat(slider.value) : 0.85;
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  // نطق الجملة السياقية بنفس الصوت المختار للناطق ونفس سرعة القراءة
   function speakModalSentence() {
     if (!('speechSynthesis' in window) || !currentList[modalActiveIndex]) return;
     window.speechSynthesis.cancel();
     const sentence = currentList[modalActiveIndex].sentence_en || currentList[modalActiveIndex].word;
     const utter = new SpeechSynthesisUtterance(sentence);
-    if (availableVoices.length > 0) utter.voice = availableVoices[0];
-    utter.rate = 0.88;
+
+    const innerVoiceSel = document.getElementById('cardInnerVoiceSelect');
+    const mainVoiceSel = document.getElementById('modalVoiceSelect');
+    const selectedVoiceIdx = innerVoiceSel?.value || mainVoiceSel?.value;
+
+    if (selectedVoiceIdx && availableVoices[selectedVoiceIdx]) {
+      utter.voice = availableVoices[selectedVoiceIdx];
+    } else if (availableVoices.length > 0) {
+      utter.voice = availableVoices[0];
+    }
+
+    const innerSlider = document.getElementById('cardInnerRateSlider');
+    const mainSlider = document.getElementById('modalRateSlider');
+    const currentRate = innerSlider ? parseFloat(innerSlider.value) : (mainSlider ? parseFloat(mainSlider.value) : 0.85);
+
+    utter.rate = currentRate;
     window.speechSynthesis.speak(utter);
   }
 
