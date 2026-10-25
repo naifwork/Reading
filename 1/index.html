@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Glass Context Vocabulary Lab | معمل المفردات الزجاجي</title>
+  <title> Context Vocabulary Lab | معمل المفردات </title>
   <style>
     :root {
       --bg: #08080a;
@@ -313,6 +313,135 @@
       font-size: 0.88rem;
     }
 
+    /* شريط كبسولات الإظهار والإخفاء للبطاقة */
+    .view-toggles-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--glass-border);
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+
+    .view-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: auto;
+      flex: none;
+    }
+
+    .view-toggle-btn.active {
+      background: rgba(37, 99, 235, 0.22);
+      border-color: #60a5fa;
+      color: #93c5fd;
+    }
+
+    .view-toggle-btn:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    /* كرت التحليل الصرفي المطور بالتلوين الدلالي */
+    .morph-card {
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-right: 4px solid var(--purple);
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .morph-parts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+      width: 100%;
+      margin: 4px auto 0 auto;
+    }
+
+    .morph-chip {
+      direction: rtl;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: background 0.2s ease;
+    }
+
+    .morph-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .morph-chip-lead {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .morph-chip b {
+      font-family: monospace;
+      font-size: 0.85rem;
+      direction: ltr;
+      letter-spacing: 0.5px;
+    }
+
+    .morph-badge {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ألوان دلالية مخصصة لكل جزء صرفي */
+    .morph-prefix {
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .morph-prefix b { color: #38bdf8; }
+    .morph-prefix .morph-badge { background: rgba(56, 189, 248, 0.25); color: #7dd3fc; }
+
+    .morph-root {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
+    .morph-root b { color: #fbbf24; }
+    .morph-root .morph-badge { background: rgba(251, 191, 36, 0.25); color: #fde68a; }
+
+    .morph-suffix {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+    }
+    .morph-suffix b { color: #34d399; }
+    .morph-suffix .morph-badge { background: rgba(52, 211, 153, 0.25); color: #a7f3d0; }
+
+    .morph-default {
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+    }
+    .morph-default b { color: #c084fc; }
+    .morph-default .morph-badge { background: rgba(192, 132, 252, 0.25); color: #e9d5ff; }
+
     .stress-part {
       color: #fde047;
       font-weight: 900;
@@ -413,7 +542,8 @@
         <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
       </div>
       <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-        <button class="btn-secondary btn-sm" style="border-color: #818cf8; color: #c7d2fe; background: rgba(99, 102, 241, 0.15);" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات والرموز (IPA)</button>
+        <button class="btn-secondary btn-sm" style="border-color: #818cf8; color: #c7d2fe; background: rgba(99, 102, 241, 0.15);" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات (IPA)</button>
+        <button class="btn-secondary btn-sm" style="border-color: #c084fc; color: #e9d5ff; background: rgba(168, 85, 247, 0.15);" onclick="toggleMorphGuideModal()">🔬 موسوعة السوابق واللواحق</button>
         <button class="btn-secondary btn-sm" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
       </div>
     </div>
@@ -529,6 +659,16 @@
       <button class="close-circle-btn" onclick="closeModal()" title="إغلاق (Esc)">✕</button>
     </div>
 
+    <!-- شريط كبسولات الإظهار والإخفاء المباشر -->
+    <div class="view-toggles-bar">
+      <span style="font-size: 0.72rem; color: var(--muted); font-weight: bold;">🎛️ تخصيص العرض:</span>
+      <button id="togglePhoneticBtn" class="view-toggle-btn active" onclick="toggleSectionVisibility('phonetic')">🔊 الرمز والنبر</button>
+      <button id="toggleMorphBtn" class="view-toggle-btn active" onclick="toggleSectionVisibility('morph')">🔬 التحليل الصرفي</button>
+      <button id="toggleTrapBtn" class="view-toggle-btn active" onclick="toggleSectionVisibility('trap')">⚠️ فخ النطق</button>
+      <button id="toggleSentenceBtn" class="view-toggle-btn active" onclick="toggleSectionVisibility('sentence')">📌 الجملة والسياق</button>
+      <button class="view-toggle-btn" style="color: #fde047; border-color: rgba(253, 224, 71, 0.3);" onclick="toggleAllSections()">⚡ تبديل الكل</button>
+    </div>
+
     <!-- الكلمة الإنجليزية والمعنى العربي -->
     <div class="word-headline">
       <div style="text-align: left;">
@@ -551,6 +691,15 @@
         <span style="font-size: 0.75rem; color: var(--muted);">المقاطع وموضع النبر (Stress):</span>
         <span id="modalBreakdown" style="direction: ltr; font-family: monospace; font-size: 1.05rem; margin-right: 6px;">-</span>
       </div>
+    </div>
+
+    <!-- بطاقة التحليل الصرفي (Morphological Analysis) -->
+    <div class="morph-card" id="modalMorphCard">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;">
+        <span style="font-size: 0.75rem; font-weight: bold; color: #c084fc;">🔬 التحليل الصرفي وبناء الكلمة (Morphological Analysis):</span>
+        <span id="modalMorphSummary" style="font-size: 0.78rem; color: #e9d5ff; font-weight: bold;">-</span>
+      </div>
+      <div id="modalMorphParts" class="morph-parts-list"></div>
     </div>
 
     <!-- الجملة السياقية الأصلية المشتقة منها الكلمة -->
@@ -620,6 +769,599 @@
 </div>
 
 <div id="toast" class="toast-msg">تم النسخ بنجاح!</div>
+
+<!-- نافذة موسوعة السوابق واللواحق الصرفية الشاملة والموسعة (أكثر من 70 سابقة ولاحقة) -->
+<div id="morphGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 4, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='morphGuideModal')toggleMorphGuideModal()">
+  <div style="background: #14141a; border: 1px solid rgba(168, 85, 247, 0.45); border-radius: 18px; width: 100%; max-width: 900px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
+    
+    <!-- شريط الرأس والتبويبات والبحث السريع -->
+    <div style="background: #1a1a24; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.25rem;">🔬</span>
+        <div>
+          <h3 style="font-weight: 800; color: #fff; font-size: 1.05rem;">الموسوعة الشاملة للسوابق واللواحق (70+ زوائد صرفية)</h3>
+          <p style="font-size: 0.75rem; color: #a1a1aa; margin: 0;">المرجع الصرفي الكامل لفك وتركيب الكلمات الإنجليزية: الشائعة، المتوسطة، والأكاديمية مع نطق الأمثلة</p>
+        </div>
+      </div>
+      <button onclick="toggleMorphGuideModal()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; padding: 0; min-width: auto;">✕</button>
+    </div>
+
+    <!-- شريط التبديل وفلتر البحث السريع -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 10px 16px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.06);">
+      <div style="display: flex; gap: 6px;">
+        <button id="tabPrefixBtn" class="btn-primary btn-sm" style="background: #2563eb;" onclick="switchMorphTab('prefix')">🔹 السوابق (Prefixes)</button>
+        <button id="tabSuffixBtn" class="btn-secondary btn-sm" onclick="switchMorphTab('suffix')">🔸 اللواحق (Suffixes)</button>
+      </div>
+      <input type="text" id="morphFilterInput" placeholder="🔍 ابحث عن سابقة، لاحقة، أو معنى..." style="width: auto; max-width: 250px; font-size: 0.78rem; padding: 4px 10px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 6px; color: #fff;" oninput="filterMorphGuideCards()">
+    </div>
+
+    <!-- المحتوى القابل للتمرير -->
+    <div style="padding: 16px; overflow-y: auto; font-size: 0.83rem; line-height: 1.6; color: #e4e4e7; display: flex; flex-direction: column; gap: 16px;">
+      
+      <!-- إرشاد سريع للربط الذهني -->
+      <div style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.25); border-right: 4px solid #a855f7; padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; color: #e9d5ff;">
+        💡 <strong>قاعدة التحليل الصرفي:</strong> السوابق تحدد اتجاه المعنى ونفيه وموضعه الزمني/المكاني، بينما اللواحق تحول نوع الكلمة (Grammatical Category) من فعل لاسم، أو من اسم لصفة أو حال. انقر على <strong>🔊 اسمع</strong> في أي بطاقة للاستماع للكلمات فوراً.
+      </div>
+
+      <!-- ========================================== -->
+      <!-- 1. قسم السوابق الكاملة (Prefixes - 35 سابقة) -->
+      <!-- ========================================== -->
+      <div id="prefixSectionBlock">
+        
+        <!-- المستوى الأول: الأكثر شيوعاً في المناهج والقراءة (تغطي أكثر من 85%) -->
+        <div style="font-weight: 800; color: #38bdf8; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>⭐</span><span>1. السوابق الأساسية والأكثر تكراراً (Most Common):</span>
+        </div>
+        <div class="morph-guide-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 18px;">
+          
+          <div class="m-card" data-key="un- نفي عكس" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">un-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('unhappy', 'unlock', 'unfair')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نفي أو عكس المعنى (Not / Opposite)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد عدم الشيء أو نقضه؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>un</b>happy, <b>un</b>lock</span></div>
+          </div>
+
+          <div class="m-card" data-key="re- إعادة تكرار" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">re-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('rewrite', 'replay', 'restart')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">إعادة أو تكرار الفعل (Again / Back)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">عمل الشيء مرة ثانية؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>re</b>write, <b>re</b>start</span></div>
+          </div>
+
+          <div class="m-card" data-key="in- im- il- ir- نفي صامت" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">in- / im- / il- / ir-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('incorrect', 'impossible', 'illegal', 'irregular')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">النفي الصرفي للأسماء والصفات (Not)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تتحور m قبل p/b و l قبل l و r قبل r؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>im</b>possible, <b>ir</b>regular</span></div>
+          </div>
+
+          <div class="m-card" data-key="dis- مخالفة إزالة سلب" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">dis-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('disagree', 'disappear', 'disconnect')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">سلب أو مخالفة أو فصل (Opposite / Away)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">انعدام التوافق أو الذهاب بعيداً؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>dis</b>agree, <b>dis</b>connect</span></div>
+          </div>
+
+          <div class="m-card" data-key="pre- قبل مسبقا" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">pre-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('preview', 'prepare', 'predict')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">قبل أو مقدماً (Before / In front)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">الأسبقية الزمنية أو المكانية؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>pre</b>view, <b>pre</b>dict</span></div>
+          </div>
+
+          <div class="m-card" data-key="non- غير لا نفي قطعي" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">non-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('nonstop', 'nonsense', 'nonprofit')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نفي قطعي خالي من كذا (Without / Not)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد التجريد التام؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>non</b>stop, <b>non</b>profit</span></div>
+          </div>
+
+          <div class="m-card" data-key="mis- سوء خطأ" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">mis-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('misunderstand', 'mislead', 'mistake')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">خطأ أو سوء عمل (Badly / Wrongly)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">فعل الشيء بطريقة مغلوطة؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>mis</b>lead, <b>mis</b>judge</span></div>
+          </div>
+
+          <div class="m-card" data-key="anti- ضد معارض مكافح" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">anti-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('antibiotic', 'antivirus', 'antisocial')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ضد أو مقاوم لكذا (Against / Opposed)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">شائعة في الطب والمجتمع؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>anti</b>biotic, <b>anti</b>virus</span></div>
+          </div>
+
+          <div class="m-card" data-key="over- إفراط زيادة فوق" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">over-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('overwork', 'overestimate', 'overflow')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">إفراط أو مجاوزة الحد (Too much / Above)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد الكثرة الزائدة؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>over</b>work, <b>over</b>load</span></div>
+          </div>
+
+          <div class="m-card" data-key="under- نقص قلة تحت" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">under-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('underwater', 'underestimate', 'underpaid')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">دون المستوى أو تحتي (Below / Not enough)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد القلة أو الموقع؛ مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>under</b>estimate, <b>under</b>sea</span></div>
+          </div>
+
+          <div class="m-card" data-key="sub- تحت فرعي ثانوي" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">sub-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('subway', 'submarine', 'subtitle')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">تحت أو تفريع جانبي (Under / Lower)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>sub</b>way, <b>sub</b>title</span></div>
+          </div>
+
+          <div class="m-card" data-key="super- فائق خارق عالي" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">super-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('superman', 'superstar', 'supersonic')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">فوق العادة أو خارق (Above / Beyond)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>super</b>natural, <b>super</b>hero</span></div>
+          </div>
+
+          <div class="m-card" data-key="inter- بين متبادل مشترك" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">inter-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('international', 'interaction', 'internet')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">بين أو علاقة مشتركة (Between / Among)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>inter</b>national, <b>inter</b>view</span></div>
+          </div>
+
+          <div class="m-card" data-key="trans- عبر نقل تحويل" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">trans-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('transport', 'translate', 'transform')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">عبر أو انتقال من حالة لأخرى (Across / Change)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>trans</b>form, <b>trans</b>port</span></div>
+          </div>
+
+          <div class="m-card" data-key="semi- نصف جزئي" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">semi-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('semicircle', 'semifinal', 'semiprivate')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نصف أو جزئياً (Half / Partly)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>semi</b>final, <b>semi</b>circle</span></div>
+          </div>
+
+          <div class="m-card" data-key="mid- منتصف وسط" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">mid-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('midnight', 'midday', 'midterm')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">منتصف الشيء (Middle)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>mid</b>night, <b>mid</b>day</span></div>
+          </div>
+
+          <div class="m-card" data-key="fore- قبل أمامي متقدم" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">fore-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('forecast', 'forehead', 'foresee')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">أمام أو استباق قبل حدوث الشيء (Before / Front)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>fore</b>cast, <b>fore</b>head</span></div>
+          </div>
+
+          <div class="m-card" data-key="auto- ذاتي تلقائي بنفسه" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56, 189, 248, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #38bdf8; font-weight: 900; direction: ltr;">auto-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('automatic', 'autograph', 'autonomy')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">ذاتي أو يعمل بنفسه (Self / Same)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #7dd3fc;"><b>auto</b>matic, <b>auto</b>graph</span></div>
+          </div>
+
+        </div>
+
+        <!-- المستوى الثاني: الأكاديمية والتخصصية واليونانية/اللاتينية (TOFEL / GRE / Medical) -->
+        <div style="font-weight: 800; color: #a855f7; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>🪐</span><span>2. السوابق المتقدمة والأكاديمية والطبية (Advanced & Greek/Latin):</span>
+        </div>
+        <div class="morph-guide-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px;">
+          
+          <div class="m-card" data-key="ana- مفارقة عكس ضد" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">ana-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('anachronism', 'anatomy', 'anagram')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">عكس أو مفارقة الاتجاه الطبيعي (Against / Back)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">يونانية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>ana</b>chronism</span></div>
+          </div>
+
+          <div class="m-card" data-key="pseudo- زائف وهمي مدعى" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">pseudo-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('pseudoscience', 'pseudonym', 'pseudocode')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">زائف أو غير حقيقي (False / Deceptive)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">(P صامتة)؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>pseudo</b>science</span></div>
+          </div>
+
+          <div class="m-card" data-key="omni- شامل كلي جميع" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">omni-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('omnipresent', 'omniscient', 'omnivore')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">كلي أو شامل الوجود والمعرفة (All / Every)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>omni</b>present</span></div>
+          </div>
+
+          <div class="m-card" data-key="retro- ماضوي خلفي إلى الوراء" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">retro-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('retrospective', 'retroactive', 'retrofit')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نحو الماضي أو إلى الخلف (Backward / Past)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>retro</b>spective</span></div>
+          </div>
+
+          <div class="m-card" data-key="hyper- فرط زيادة علو شديد" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">hyper-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hyperactive', 'hypertension', 'hyperbole')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">فرط أو تجاوز الحد الشديد (Over / Excessive)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>hyper</b>active, <b>hyper</b>tension</span></div>
+          </div>
+
+          <div class="m-card" data-key="hypo- هبوط نقص تحت" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">hypo-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hypothermia', 'hypothesis', 'hypoglycemia')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نقص حاد أو هبوط تحت الطبيعي (Under / Deficient)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>hypo</b>thermia</span></div>
+          </div>
+
+          <div class="m-card" data-key="poly- متعدد كثير" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">poly-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('polygon', 'polymer', 'polyglot')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">متعدد أو كثير (Many / Multiple)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>poly</b>glot (متحدث لغات متعددة)</span></div>
+          </div>
+
+          <div class="m-card" data-key="mono- أحادي فردي واحد" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">mono-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('monologue', 'monopoly', 'monochrome')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">أحادي أو منفرد (Single / One)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>mono</b>logue</span></div>
+          </div>
+
+          <div class="m-card" data-key="bio- حيوي حياة بيولوجي" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">bio-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('biology', 'biography', 'biodiversity')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">متعلق بالحياة والكائنات الحية (Life / Living)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>bio</b>logy</span></div>
+          </div>
+
+          <div class="m-card" data-key="tele- عن بعد بعيد اتصالات" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">tele-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('telephone', 'telescope', 'telepathy')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">عن بُعد أو عبر مسافة طويلة (Distant / Far)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>tele</b>scope</span></div>
+          </div>
+
+          <div class="m-card" data-key="mal- سوء سيء علة" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">mal-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('malfunction', 'malicious', 'malnutrition')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">سوء أو خلل أو خبيث (Bad / Evil / Faulty)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>mal</b>function, <b>mal</b>ware</span></div>
+          </div>
+
+          <div class="m-card" data-key="bene- خير حسن إحسان" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">bene-</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('benefit', 'benefactor', 'benevolent')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">خير أو نفع وإحسان (Good / Well)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;"><b>bene</b>fit, <b>bene</b>volent</span></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- 2. قسم اللواحق الكاملة (Suffixes - 35 لاحقة) -->
+      <!-- ========================================== -->
+      <div id="suffixSectionBlock" style="display: none;">
+        
+        <!-- المستوى الأول: الأكثر شيوعاً في قواعد وصرف الإنجليزية (تكوين الأسماء والصفات والأحوال) -->
+        <div style="font-weight: 800; color: #10b981; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>⭐</span><span>1. اللواحق الأساسية والأكثر شيوعاً (Noun, Adj, Verb, Adverb Formers):</span>
+        </div>
+        <div class="morph-guide-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 18px;">
+          
+          <div class="m-card" data-key="-able -ible قابل إمكانية صفة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-able / -ible</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('comfortable', 'readable', 'flexible')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة صفة: قابل ومستحق لكذا (Capable of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الفعل لصفة؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">read<b>able</b>, flex<b>ible</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-tion -sion اسم عملية حدث" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-tion / -sion</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('action', 'creation', 'decision')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: العملية أو الحدث (Action / Result)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الفعل لاسم مجرد؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">ac<b>tion</b>, deci<b>sion</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ful مليء وفرة صفة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ful</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('helpful', 'hopeful', 'peaceful')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة صفة: مفعم بـ أو ذو كذا (Full of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد الوفرة والاتصاف؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">help<b>ful</b>, beauti<b>ful</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-less بدون عديم حرمان صفة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-less</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('hopeless', 'careless', 'fearless')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة صفة: عديم الشيء أو بدونه (Without)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تفيد الحرمان؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">fear<b>less</b>, pain<b>less</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ly حال ظرف بكيفية" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ly</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('quickly', 'slowly', 'happily')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة حال: بطريقة معينة (In a manner of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الصفة إلى ظرف/حال؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">quick<b>ly</b>, slow<b>ly</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ness اسم حالة صفة مجردة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ness</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('kindness', 'darkness', 'happiness')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: حالة وجود الصفة (State / Condition)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الصفة لاسم مجرد؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">kind<b>ness</b>, dark<b>ness</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ment اسم نتيجة فعل إجراء" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ment</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('development', 'movement', 'enjoyment')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: نتيجة الفعل أو أداته (Result of Action)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الفعل لاسم؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">develop<b>ment</b>, move<b>ment</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-er -or فاعل مهنة اسم شخص" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-er / -or</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('teacher', 'actor', 'inventor')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم فاعل: القائم بالفعل (One who does)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">اسم المهنة؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">teach<b>er</b>, act<b>or</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ity -ty اسم كينونة حالة جودة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ity / -ty</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('ability', 'activity', 'creativity')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: خاصية أو جودة الكيان (Quality / State)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">شائعة باللاتيني؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">abil<b>ity</b>, creativ<b>ity</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ous -ious صفة ذو طابع وفرة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ous / -ious</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('dangerous', 'famous', 'mysterious')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة صفة: يتصف بكذا أو محفوف به (Having / Full of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">danger<b>ous</b>, fam<b>ous</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ive صفة فاعلية ميل نزعة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ive</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('active', 'creative', 'attractive')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة صفة: نزّاع لكذا أو فعّال (Tending to / Doing)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">creat<b>ive</b>, act<b>ive</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ize -ise فعل تصيير جعل صانعة فعل" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ize / -ise</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('realize', 'modernize', 'organize')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة فعل: تصيير الشيء أو جعله كذا (To make / Become)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">تحول الاسم أو الصفة لفعل؛ مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">modern<b>ize</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ify -fy فعل تحويل تصيير" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ify / -fy</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('simplify', 'clarify', 'identify')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة فعل: إكساب صفة الشيء (To make or cause)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">simpli<b>fy</b>, clari<b>fy</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-en فعل صيرورة زيادة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-en</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('shorten', 'strengthen', 'brighten')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة فعل: زيادة الشيء أو تحويله (To become / Cause)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">short<b>en</b>, strength<b>en</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ship اسم علاقة مهارة منصب" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ship</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('friendship', 'leadership', 'championship')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: صفة الرابطة أو المهارة والمنصب (Status / Skill)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">leader<b>ship</b>, friend<b>ship</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-hood اسم طور مرحلة جماعة" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-hood</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('childhood', 'neighborhood', 'brotherhood')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة اسم: مرحلة عمرية أو مجتمع مشترك (State / Period)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">child<b>hood</b>, neighbor<b>hood</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-ward -wards اتجاه نحو حال" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-ward / -wards</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('forward', 'backward', 'homeward')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة حال/صفة: تدل على الوجهة والاتجاه (In direction of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">for<b>ward</b>, back<b>ward</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-wise من جهة بخصوص حال" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #34d399; font-weight: 900; direction: ltr;">-wise</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('clockwise', 'likewise', 'otherwise')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة حال: من ناحية كذا أو على نسق كذا (In relation to)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #a7f3d0;">clock<b>wise</b></span></div>
+          </div>
+
+        </div>
+
+        <!-- المستوى الثاني: الأكاديمية والتخصصية واليونانية (Suffixes - Specialized & Academic) -->
+        <div style="font-weight: 800; color: #a855f7; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+          <span>🪐</span><span>2. اللواحق الأكاديمية والمتقدمة والنادرة (Academic, Scientific & Latin):</span>
+        </div>
+        <div class="morph-guide-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px;">
+          
+          <div class="m-card" data-key="-ism مذهب عقيدة سلوك" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-ism</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('anachronism', 'optimism', 'realism')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">حالة أو مذهب أو مفهوم مجرد (Doctrine / State)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">optim<b>ism</b>, anachron<b>ism</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-logy علم دراسة تخصص" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-logy / -ology</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('psychology', 'geology', 'archaeology')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">صانعة علم وتخصص أكاديمي (Study of / Science)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">يونانية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">psycho<b>logy</b>, geo<b>logy</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-phobia رهاب خوف مرضي" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-phobia</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('claustrophobia', 'acrophobia', 'xenophobia')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">رهاب أو خوف غير طبيعي (Irrational Fear)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">طبية ونفسية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">claustro<b>phobia</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-oid شبيه مماثل شكل" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-oid</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('humanoid', 'android', 'asteroid')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">شبيه به أو على هيئته (Resembling)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">علمية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">human<b>oid</b>, aster<b>oid</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-cracy حكم سلطة نظام" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-cracy</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('democracy', 'bureaucracy', 'aristocracy')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">نظام حكم أو سلطة إدارة (Rule / Government)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">سياسية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">demo<b>cracy</b>, bureau<b>cracy</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-cide إبادة قتل استئصال" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-cide</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('pesticide', 'insecticide', 'homicide')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">قتل أو إبادة ومكافحة (Killing / Destroyer)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">علمية وطبية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">pesti<b>cide</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-graphy رسم كتابة تدوين" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-graphy</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('photography', 'geography', 'biography')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">تدوين أو رسم وتصوير (Writing / Recording)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">photo<b>graphy</b>, bio<b>graphy</b></span></div>
+          </div>
+
+          <div class="m-card" data-key="-esque على نمط طراز أدبي" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(168, 85, 247, 0.25); padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 1.15rem; color: #c084fc; font-weight: 900; direction: ltr;">-esque</span>
+              <button class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.72rem;" onclick="speakPhoneticSample('picturesque', 'statuesque', 'kafkaesque')">🔊 اسمع</button>
+            </div>
+            <div style="font-weight: bold; color: #fff;">على أسلوب أو نمط كذا (In the style of)</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa;">أدبية وفنية؛ مثل: <span style="direction: ltr; display: inline-block; color: #e9d5ff;">pictur<b>esque</b></span></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- أسفل النافذة -->
+    <div style="background: #1a1a24; padding: 10px 18px; text-align: left; border-top: 1px solid rgba(255,255,255,0.08);">
+      <button class="btn-secondary btn-sm" onclick="toggleMorphGuideModal()">إغلاق الموسوعة</button>
+    </div>
+
+  </div>
+</div>
 
 <!-- نافذة موسوعة نطق الرموز الصوتية الكاملة والشاملة (44 صوتاً + الرموز الخاصة) -->
 <div id="phoneticGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 4, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='phoneticGuideModal')togglePhoneticGuideModal()">
@@ -1134,25 +1876,34 @@
       return;
     }
     const count = parseInt(document.getElementById('wordCountInput')?.value, 10) || 8;
-    const promptText = `من النص المرفق، استخرج أكثر (${count}) كلمات تتسم بالصعوبة، أو الطول، أو الغرابة الصوتية (مثل أحرف صامتة، نبر غير متوقع، أو تتابعات ساكنة دقيقة).
-المعايير:
-1. استخرج "الجملة الأصلية الحقيقية الكاملة التي وردت فيها هذه الكلمة" مع ترجمتها العربية المتقنة.
-2. حدد تقطيع المقاطع الصوتية (breakdown) وموضع النبر الرئيسي (stress) والرمز الصوتي (phonetic) وفخ النطق (trap).
+    const promptText = `من النص المرفق، استخرج بدقة (${count}) مفردات من الكلمات التي تتسم بالصعوبة، أو الغرابة الصوتية (مثل أحرف صامتة Silent Letters، تتابعات صوتية غير مألوفة، نبر غير متوقع)، أو تركيب صرفي غني.
+المعايير الإلزامية:
+1. الالتزام التام بنص المصدر: استخرج "الجملة الحقيقية الكاملة كما وردت بنصها تماماً في المصدر" دون اختلاق جمل من عندك، ولا تمنع الكلمات ذات الأمثلة طالما أنها واردة في المصدر المرفق.
+2. التحليل الصرفي المتقن (morphology): فكك الكلمة إلى أجزائها (بادئة prefix، جذر/أصل root/base، لاحقة suffix)، مع بيان معنى كل جزء بالعربية، ثم بيان المعنى المتحصل بعد التركيب.
+3. التقطيع ومقاطع الكلمة (breakdown) وموضع النبر الرئيسي (stress) والرمز الصوتي الدولي (phonetic) وفخ النطق الحقيقي (trap).
 
-أخرج الرد حصراً ككود JSON صالح وبدون أي مقدمات أو شروحات خارج الكود بالهيكل التالي:
+أخرج الرد حصراً داخل كتلة كود قابلة للنسخ فقط بصيغة json صحيحة وبدون أي مقدمات أو شروحات خارج الكود:
 
+\`\`\`json
 [
   {
     "word": "ExactWord",
-    "ar": "المعنى العربي",
+    "ar": "المعنى العربي الدقيق",
     "phonetic": "/IPA/",
     "breakdown": "syl-la-ble",
     "stress": "syl",
-    "sentence_en": "The exact full sentence from the text containing the word.",
+    "morphology": {
+      "summary": "توضيح مختصر لكيف شكّل التركيب المعنى الإجمالي",
+      "parts": [
+        { "part": "prefix/root/suffix", "type": "root", "meaning": "معناه بالعربية" }
+      ]
+    },
+    "sentence_en": "The exact sentence as written in the text.",
     "sentence_ar": "ترجمة الجملة إلى العربية.",
-    "trap": "تنبيه فخ النطق والحرف الصامت أو المعقد"
+    "trap": "فخ النطق والأحرف الصامتة"
   }
 ]
+\`\`\`
 
 النص المستهدف:
 """
@@ -1218,41 +1969,47 @@ ${text}
     }
     const count = parseInt(document.getElementById('wordCountInput').value, 10) || 8;
 
-    const promptText = `أريد قائمة دقيقة ومحكمة بعدد (${count}) كلمات إنجليزية منتقاة من مجال أو منهج: (${domainName}).
-المعايير الصارمة:
-1. اختر كلمات تتسم بالصعوبة، أو الطول، أو الغرابة الصوتية (مثل أحرف صامتة Silent Letters، نبر غير متوقع Stress Shift، أو تتابعات ساكنة دقيقة).
-2. لكل كلمة، ضع "الجملة الأصلية الحقيقية التي اشتُقت منها الكلمة" مع ترجمتها الدقيقة بالعربية.
-3. حدد تقطيع المقاطع (breakdown) ومقطع النبر الرئيسي (stress) والرمز الصوتي (phonetic) وفخ النطق (trap).
+    const promptText = `أريد قائمة دقيقة وموثوقة بعدد (${count}) كلمات إنجليزية منتقاة من مجال أو منهج: (${domainName}).
+المعايير الإلزامية والصارمة:
+1. لا تقتصر على طول الكلمة فقط، بل ركز على الكلمات الغريبة والمليئة بالتحديات الصوتية والصرفية (أحرف صامتة Silent Letters، نطق غير متطابق مع الكتابة، نبر غير متوقع Stress Shift).
+2. لا تمنع الكلمات الشائعة التي تحتوي على أمثلة إذا كانت موجودة في سياق حقيقي معتمد، وتأكد من صحة الجملة الموثقة وعدم اختلاق جمل غير طبيعية.
+3. التحليل الصرفي (Morphological Analysis): فكك الكلمة إلى أجزائها (بادئة Prefix، جذر/أصل Root، لاحقة Suffix)، مع إيضاح معنى كل جزء بمفرده، ثم المعنى الناتج بعد التركيب.
+4. الرمز الصوتي الدولي (IPA)، ومقاطع الكلمة (breakdown)، ومقطع النبر الرئيسي (stress)، وفخ النطق (trap).
 
-أخرج الرد حصراً ككود JSON صالح وبدون أي مقدمات أو علامات إضافية خارج الكود بالهيكل التالي:
+أخرج الرد حصراً داخل كتلة كود قابلة للنسخ بصيغة json بدون مقدمات أو هوامش خارج الكود:
 
+\`\`\`json
 [
   {
-    "word": "anesthesia",
-    "ar": "تخدير (طبي)",
-    "phonetic": "/ˌæn.əsˈθiː.zi.ə/",
-    "breakdown": "an-es-the-sia",
-    "stress": "the",
-    "sentence_en": "The patient was placed under general anesthesia before the operation.",
-    "sentence_ar": "تم وضع المريض تحت التخدير العام قبل بدء العملية الجراحية.",
-    "trap": "النبر على مقطع (the) وصوت th يلفظ ثاءً مرققة."
+    "word": "characteristics",
+    "ar": "خصائص أو سمات مميزة",
+    "phonetic": "/ˌkær.ək.təˈrɪs.tɪks/",
+    "breakdown": "char-ac-ter-is-tics",
+    "stress": "is",
+    "morphology": {
+      "summary": "character (طابع/سمة) + istic (لاحقة صفة) + s (علامة الجمع) = السمات والخصائص المميزة",
+      "parts": [
+        { "part": "character", "type": "جذر (Root)", "meaning": "طابع / سمة أو شخصية" },
+        { "part": "-istic", "type": "لاحقة (Suffix)", "meaning": "لاحقة تفيد النسبة أو صنع الصفة" },
+        { "part": "-s", "type": "لاحقة (Suffix)", "meaning": "علامة جمع الأسماء" }
+      ]
+    },
+    "sentence_en": "Certain genetic characteristics are inherited from parents.",
+    "sentence_ar": "تنتقل بعض الخصائص الوراثية بالوراثة من الوالدين.",
+    "trap": "تلفظ ch كحرف الكاف /k/، والنبر الرئيسي يقع على المقطع قبل الأخير (is)."
   }
-]`;
+]
+\`\`\``;
 
     secureCopy(promptText, `تم نسخ البرومبت بنجاح لمجال: ${domainName}`);
   }
 
   function loadSampleContextData() {
-    const sample = [
-      {
-        "word": "anesthesia",
-        "ar": "تخدير (طبي)",
-        "phonetic": "/ˌæn.əsˈθiː.zi.ə/",
-        "breakdown": "an-es-the-sia",
-        "stress": "the",
-        "sentence_en": "The patient was placed under general anesthesia before the operation.",
-        "sentence_ar": "تم وضع المريض تحت التخدير العام قبل بدء العملية الجراحية.",
-        "trap": "النبر على مقطع (the) وصوت th يلفظ ثاءً مرققة."
+    const sample = [      {        "word": "characteristics",        "ar": "خصائص أو سمات مميزة",        "phonetic": "/ˌkær.ək.təˈrɪs.tɪks/",        "breakdown": "char-ac-ter-is-tics",        "stress": "is",        "morphology": {          "summary": "character (طابع) + istic (صفة) + s (جمع) = الخصائص الفارقة",          "parts": [            { "part": "character", "type": "جذر (Root)", "meaning": "طابع أو سمة أساسية" },            { "part": "-istic", "type": "لاحقة (Suffix)", "meaning": "صانعة للصفة (متعلق بـ)" },            { "part": "-s", "type": "لاحقة (Suffix)", "meaning": "علامة الجمع" }          ]
+        },
+        "sentence_en": "Certain physical characteristics make this species uniquely adapted to the desert.",
+        "sentence_ar": "تجعل بعض الخصائص الجسدية هذا النوع متكيفاً بشكل فريد مع الصحراء.",
+        "trap": "نطق ch كصوت /k/، والنبر الرئيسي يرتكز على مقطع (is)."
       },
       {
         "word": "subtle",
@@ -1260,39 +2017,33 @@ ${text}
         "phonetic": "/ˈsʌt.əl/",
         "breakdown": "sub-tle",
         "stress": "sub",
+        "morphology": {
+          "summary": "مشتقة من اللاتينية subtilis تعني منسوج بدقة متناهية وخفي",
+          "parts": [
+            { "part": "subtle", "type": "أصل (Base)", "meaning": "خفي أو بالغ الرقة والدقة" }
+          ]
+        },
         "sentence_en": "There was a subtle difference in her tone that made everyone listen closely.",
         "sentence_ar": "كان هناك اختلاف خفي ودقيق في نبرتها جعل الجميع يصغي بانتباه.",
-        "trap": "حرف (b) صامت لا يُنطق أبداً؛ تلفظ 'سَتِل'."
+        "trap": "حرف (b) صامت تماماً لا ينطق إطلاقاً؛ تلفظ 'سَتِل'."
       },
       {
-        "word": "colonel",
-        "ar": "عقيد (رتبة عسكرية)",
-        "phonetic": "/ˈkɜː.nəl/",
-        "breakdown": "colo-nel",
-        "stress": "colo",
-        "sentence_en": "The colonel ordered the regiment to hold their defensive positions until dawn.",
-        "sentence_ar": "أمر العقيد الكتيبة بالثبات في مواقعها الدفاعية حتى الفجر.",
-        "trap": "لا يُنطق حرف اللام إطلاقاً؛ الكلمة تلفظ كأنها Kernel."
-      },
-      {
-        "word": "mischievous",
-        "ar": "مشاكس / عابث",
-        "phonetic": "/ˈmɪs.tʃɪ.vəs/",
-        "breakdown": "mis-chie-vous",
-        "stress": "mis",
-        "sentence_en": "The mischievous little puppy hid all the slippers under the sofa.",
-        "sentence_ar": "قام الجرو المشاكس بإخفاء جميع النعال تحت الأريكة.",
-        "trap": "الكلمة 3 مقاطع فقط؛ لا تضف ياء إضافية بعد حرف الـ v."
-      },
-      {
-        "word": "comfortable",
-        "ar": "مريح",
-        "phonetic": "/ˈkʌm.fət.ə.bəl/",
-        "breakdown": "com-fort-a-ble",
-        "stress": "com",
-        "sentence_en": "She sat in a comfortable armchair by the window to read her novel.",
-        "sentence_ar": "جلست في كرسي مريح بجوار النافذة لتقرأ روايتها.",
-        "trap": "النبر على (com) والمقاطع الأخيرة تخفف إلى 'فتبل' وتجنب نطق كلمة table."
+        "word": "anesthesia",
+        "ar": "تخدير (فقدان الإحساس)",
+        "phonetic": "/ˌæn.əsˈθiː.zi.ə/",
+        "breakdown": "an-es-the-sia",
+        "stress": "the",
+        "morphology": {
+          "summary": "an (نفي) + esthesia (إحساس وشعور) = انعدام الإحساس بالألم",
+          "parts": [
+            { "part": "an-", "type": "بادئة (Prefix)", "meaning": "أداة نفي تعني بدون أو لا" },
+            { "part": "esthes-", "type": "جذر (Root)", "meaning": "إحساس أو شعور" },
+            { "part": "-ia", "type": "لاحقة (Suffix)", "meaning": "حالة أو مرض مركب" }
+          ]
+        },
+        "sentence_en": "The patient was placed under general anesthesia before the operation.",
+        "sentence_ar": "تم وضع المريض تحت التخدير العام قبل بدء العملية الجراحية.",
+        "trap": "النبر على مقطع (the) وصوت th يلفظ ثاءً مرققة."
       }
     ];
     document.getElementById('jsonInput').value = JSON.stringify(sample, null, 2);
@@ -1436,6 +2187,44 @@ ${text}
       document.getElementById('modalBreakdown').textContent = breakdown;
     }
 
+    // عرض التحليل الصرفي المطور (Morphological Analysis)
+    const morphCard = document.getElementById('modalMorphCard');
+    const morphSummary = document.getElementById('modalMorphSummary');
+    const morphParts = document.getElementById('modalMorphParts');
+    if (item.morphology) {
+      morphSummary.textContent = item.morphology.summary || '';
+      if (Array.isArray(item.morphology.parts) && item.morphology.parts.length > 0) {
+        morphParts.innerHTML = item.morphology.parts.map(p => {
+          const typeStr = (p.type || '').toLowerCase();
+          let cls = 'morph-default';
+          let badgeText = p.type || 'عنصر';
+          if (typeStr.includes('prefix') || typeStr.includes('بادئة')) {
+            cls = 'morph-prefix';
+            badgeText = 'بادئة Prefix';
+          } else if (typeStr.includes('root') || typeStr.includes('base') || typeStr.includes('جذر') || typeStr.includes('أصل')) {
+            cls = 'morph-root';
+            badgeText = 'جذر Root';
+          } else if (typeStr.includes('suffix') || typeStr.includes('لاحقة')) {
+            cls = 'morph-suffix';
+            badgeText = 'لاحقة Suffix';
+          }
+          return `
+            <div class="morph-chip ${cls}">
+              <div class="morph-chip-lead">
+                <span class="morph-badge">${badgeText}</span>
+                <b>${p.part}</b>
+              </div>
+              <span style="color: #e4e4e7; font-size: 0.74rem;">${p.meaning || ''}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        morphParts.innerHTML = '';
+      }
+    }
+
+    applySectionsVisibility();
+
     const sentenceEn = item.sentence_en || item.word;
     const regex = new RegExp(`(${item.word})`, 'gi');
     const highlightedSentence = sentenceEn.replace(regex, `<span class="highlight-target">$1</span>`);
@@ -1514,6 +2303,38 @@ ${text}
     m.style.display = isHidden ? 'flex' : 'none';
     if (!isHidden && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+    }
+  }
+
+  function toggleMorphGuideModal() {
+    const m = document.getElementById('morphGuideModal');
+    if (!m) return;
+    const isHidden = (m.style.display === 'none' || m.style.display === '');
+    m.style.display = isHidden ? 'flex' : 'none';
+    if (!isHidden && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function switchMorphTab(tab) {
+    const pBlock = document.getElementById('prefixSectionBlock');
+    const sBlock = document.getElementById('suffixSectionBlock');
+    const pBtn = document.getElementById('tabPrefixBtn');
+    const sBtn = document.getElementById('tabSuffixBtn');
+    if (tab === 'prefix') {
+      pBlock.style.display = 'block';
+      sBlock.style.display = 'none';
+      pBtn.className = 'btn-primary btn-sm';
+      pBtn.style.background = '#2563eb';
+      sBtn.className = 'btn-secondary btn-sm';
+      sBtn.style.background = 'transparent';
+    } else {
+      pBlock.style.display = 'none';
+      sBlock.style.display = 'block';
+      sBtn.className = 'btn-primary btn-sm';
+      sBtn.style.background = '#10b981';
+      pBtn.className = 'btn-secondary btn-sm';
+      pBtn.style.background = 'transparent';
     }
   }
 
@@ -1691,6 +2512,56 @@ ${constraintText}
 - مسرد سريع بالأسفل يوضح معنى كل كلمة مستهدفة وسياقها في النص.`;
 
     secureCopy(promptText, 'تم نسخ برومبت إنشاء القطعة القرائية بنجاح!');
+  }
+
+  // إدارة حالة إظهار وإخفاء أقسام البطاقة وتخزينها
+  let cardSectionsVisibility = JSON.parse(localStorage.getItem('glass_vocab_vis') || JSON.stringify({
+    phonetic: true,
+    morph: true,
+    trap: true,
+    sentence: true
+  }));
+
+  function toggleSectionVisibility(key) {
+    cardSectionsVisibility[key] = !cardSectionsVisibility[key];
+    localStorage.setItem('glass_vocab_vis', JSON.stringify(cardSectionsVisibility));
+    applySectionsVisibility();
+  }
+
+  function toggleAllSections() {
+    const anyVisible = Object.values(cardSectionsVisibility).some(v => v);
+    const targetState = !anyVisible;
+    Object.keys(cardSectionsVisibility).forEach(k => { cardSectionsVisibility[k] = targetState; });
+    localStorage.setItem('glass_vocab_vis', JSON.stringify(cardSectionsVisibility));
+    applySectionsVisibility();
+  }
+
+  function applySectionsVisibility() {
+    const secStress = document.querySelector('.stress-strip');
+    const secMorph = document.getElementById('modalMorphCard');
+    const secTrap = document.querySelector('.trap-card');
+    const secSent = document.querySelector('.sentence-box');
+
+    // إخفاء كلي للمساحة (Collapse / Hide) دون ترك أي فراغ
+    if (secStress) secStress.style.display = cardSectionsVisibility.phonetic ? 'flex' : 'none';
+    if (secMorph) {
+      const hasMorph = Boolean(currentList[modalActiveIndex]?.morphology);
+      secMorph.style.display = (cardSectionsVisibility.morph && hasMorph) ? 'flex' : 'none';
+    }
+    if (secTrap) secTrap.style.display = cardSectionsVisibility.trap ? 'block' : 'none';
+    if (secSent) secSent.style.display = cardSectionsVisibility.sentence ? 'flex' : 'none';
+
+    // مزامنة حالة الكبسولات التفاعلية
+    const setBtnState = (id, active) => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      if (active) btn.classList.add('active');
+      else btn.classList.remove('active');
+    };
+    setBtnState('togglePhoneticBtn', cardSectionsVisibility.phonetic);
+    setBtnState('toggleMorphBtn', cardSectionsVisibility.morph);
+    setBtnState('toggleTrapBtn', cardSectionsVisibility.trap);
+    setBtnState('toggleSentenceBtn', cardSectionsVisibility.sentence);
   }
 
   updateFavCountBadge();
