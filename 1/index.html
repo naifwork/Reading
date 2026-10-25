@@ -1877,12 +1877,15 @@
     }
     const count = parseInt(document.getElementById('wordCountInput')?.value, 10) || 8;
     const promptText = `من النص المرفق، استخرج بدقة (${count}) مفردات من الكلمات التي تتسم بالصعوبة، أو الغرابة الصوتية (مثل أحرف صامتة Silent Letters، تتابعات صوتية غير مألوفة، نبر غير متوقع)، أو تركيب صرفي غني.
+
 المعايير الإلزامية:
 1. الالتزام التام بنص المصدر: استخرج "الجملة الحقيقية الكاملة كما وردت بنصها تماماً في المصدر" دون اختلاق جمل من عندك، ولا تمنع الكلمات ذات الأمثلة طالما أنها واردة في المصدر المرفق.
 2. التحليل الصرفي المتقن (morphology): فكك الكلمة إلى أجزائها (بادئة prefix، جذر/أصل root/base، لاحقة suffix)، مع بيان معنى كل جزء بالعربية، ثم بيان المعنى المتحصل بعد التركيب.
 3. التقطيع ومقاطع الكلمة (breakdown) وموضع النبر الرئيسي (stress) والرمز الصوتي الدولي (phonetic) وفخ النطق الحقيقي (trap).
 
-أخرج الرد حصراً داخل كتلة كود قابلة للنسخ فقط بصيغة json صحيحة وبدون أي مقدمات أو شروحات خارج الكود:
+شرط الإخراج التقني الإلزامي:
+- ضع الرد حصراً داخل "مربع كود برمجي واحد" (Code Block) بصيغة json لتسهيل نسخه بنقرة واحدة عبر زر Copy Code.
+- ممنوع منعاً باتاً كتابة أي نص أو ترحيب أو شرح تمهيدي أو خاتمة خارج مربع الكود؛ يجب أن يبدأ ردك فوراً بـ \`\`\`json وينتهي بـ \`\`\`.
 
 \`\`\`json
 [
@@ -1970,13 +1973,16 @@ ${text}
     const count = parseInt(document.getElementById('wordCountInput').value, 10) || 8;
 
     const promptText = `أريد قائمة دقيقة وموثوقة بعدد (${count}) كلمات إنجليزية منتقاة من مجال أو منهج: (${domainName}).
+
 المعايير الإلزامية والصارمة:
 1. لا تقتصر على طول الكلمة فقط، بل ركز على الكلمات الغريبة والمليئة بالتحديات الصوتية والصرفية (أحرف صامتة Silent Letters، نطق غير متطابق مع الكتابة، نبر غير متوقع Stress Shift).
 2. لا تمنع الكلمات الشائعة التي تحتوي على أمثلة إذا كانت موجودة في سياق حقيقي معتمد، وتأكد من صحة الجملة الموثقة وعدم اختلاق جمل غير طبيعية.
 3. التحليل الصرفي (Morphological Analysis): فكك الكلمة إلى أجزائها (بادئة Prefix، جذر/أصل Root، لاحقة Suffix)، مع إيضاح معنى كل جزء بمفرده، ثم المعنى الناتج بعد التركيب.
 4. الرمز الصوتي الدولي (IPA)، ومقاطع الكلمة (breakdown)، ومقطع النبر الرئيسي (stress)، وفخ النطق (trap).
 
-أخرج الرد حصراً داخل كتلة كود قابلة للنسخ بصيغة json بدون مقدمات أو هوامش خارج الكود:
+شرط الإخراج التقني الإلزامي:
+- ضع الإخراج حصراً ومباشرة داخل "مربع كود برمجي واحد فقط" (Code Block) بصيغة json حتى يسهل نسخه بنقرة واحدة عبر زر Copy Code.
+- لا تضع أي كلمة أو تحية أو شرح أو هوامش خارج مربع الكود نهائياً؛ يبدأ الرد مباشرة بـ \`\`\`json وينتهي بـ \`\`\`.
 
 \`\`\`json
 [
@@ -2052,19 +2058,34 @@ ${text}
 
   function parseAndMountWords() {
     let raw = document.getElementById('jsonInput').value.trim();
-    if (!raw) return;
-    raw = raw.replace(/```json|```/g, '').replace(/\/\/.*$/gm, '');
+    if (!raw) {
+      alert('يرجى لصق الكود في الصندوق أولاً.');
+      return;
+    }
+
+    // تنظيف ذكي وشامل: إزالة وسوم الكود وكلمة json المستقلة والتعليقات
+    raw = raw.replace(/```json|```/gi, '').replace(/\/\/.*$/gm, '').trim();
+    raw = raw.replace(/^json\s*/i, ''); // إزالة كلمة json في بداية النص فوراً
+
+    // استخراج المصفوفة بدقة من أول [ إلى آخر ] لتجاهل أي مقدمات أو شروحات جانبية
+    const firstBracket = raw.indexOf('[');
+    const lastBracket = raw.lastIndexOf(']');
+
+    if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+      raw = raw.substring(firstBracket, lastBracket + 1);
+    }
+
     try {
       const data = JSON.parse(raw);
       if (!Array.isArray(data) || data.length === 0) {
-        alert('يجب أن يكون ملف JSON عبارة عن مصفوفة كلمات صحيحة.');
+        alert('تأكد أن الكود يحتوي على مصفوفة كلمات صحيحة.');
         return;
       }
       rawWordList = data;
       filterList();
-      showToast(`تم تثبيت ${rawWordList.length} كلمة بنجاح!`);
+      showToast(`تم تثبيت ${rawWordList.length} كلمة بنجاح! 🎉`);
     } catch (e) {
-      alert('خطأ في صيغة كود JSON. تأكد من سلامة الأقواس والفواصل.');
+      alert('تعذر قراءة الكود؛ تأكد من نسخه كاملاً بدايةً من علامة [ وحتى علامة ].');
     }
   }
 
@@ -2336,6 +2357,20 @@ ${text}
       pBtn.className = 'btn-secondary btn-sm';
       pBtn.style.background = 'transparent';
     }
+    filterMorphGuideCards();
+  }
+
+  function filterMorphGuideCards() {
+    const q = document.getElementById('morphFilterInput')?.value.trim().toLowerCase() || '';
+    const cards = document.querySelectorAll('.morph-guide-grid .m-card');
+    cards.forEach(c => {
+      const text = (c.getAttribute('data-key') || '') + ' ' + c.innerText.toLowerCase();
+      if (!q || text.includes(q)) {
+        c.style.display = 'flex';
+      } else {
+        c.style.display = 'none';
+      }
+    });
   }
 
   // دالة متقدمة لنطق أمثلة الرموز الصوتية بالصوت والسرعة المختارة
