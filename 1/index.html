@@ -3,34 +3,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title> Context Vocabulary Lab | معمل المفردات </title>
+  <!-- خط اليمامة (Alyamama) من خطوط جوجل المعتمد في المنظومة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Alyamama:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #08080a;
-      --glass-panel: rgba(22, 22, 28, 0.62);
-      --glass-card: rgba(28, 28, 36, 0.55);
-      --glass-modal: rgba(18, 18, 24, 0.88);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-border-focus: rgba(96, 165, 250, 0.45);
-      --text: #f3f3f6;
-      --muted: #9e9ea8;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --accent-glow: rgba(37, 99, 235, 0.35);
+      color-scheme: dark;
+      --bg: #05130e;
+      --card: rgba(11, 34, 26, 0.75);
+      --inner: rgba(6, 20, 15, 0.85);
+      --glass-panel: rgba(11, 34, 26, 0.75);
+      --glass-card: rgba(6, 20, 15, 0.85);
+      --glass-modal: rgba(8, 34, 26, 0.94);
+      --glass-border: rgba(52, 211, 153, 0.22);
+      --glass-border-focus: rgba(16, 185, 129, 0.6);
+      --border: rgba(52, 211, 153, 0.22);
+      --border-strong: rgba(16, 185, 129, 0.5);
+      --text: #ecfdf5;
+      --muted: #94b8ac;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-glow: rgba(52, 211, 153, 0.35);
+      --glow: #34d399;
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --purple: #8b5cf6;
+      --info: #06b6d4;
+      --purple: #a855f7;
       --star: #fbbf24;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Alyamama', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background-color: var(--bg);
       background-image:
-        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.16) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.14) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 65%);
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
       background-attachment: fixed;
       color: var(--text);
       padding: 14px;
@@ -51,33 +68,38 @@
 
     .glass-panel {
       background: var(--glass-panel);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--glass-border);
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
-    h1 { font-size: 1.18rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
-    h2 { font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    h1 { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    h2 { font-size: 0.98rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
     p.sub { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
 
     select, input[type="number"], input[type="text"], textarea {
-      background: rgba(10, 10, 14, 0.7);
-      border: 1px solid var(--glass-border);
+      background: var(--inner);
+      border: 1px solid var(--border);
       color: #fff;
       border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.85rem;
+      padding: 6px 10px;
+      font-size: 0.84rem;
       outline: none;
       transition: all 0.2s ease;
       width: 100%;
     }
 
+    option, optgroup {
+      background-color: #061a13 !important;
+      color: #ecfdf5 !important;
+    }
+
     select:focus, input:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 12px var(--accent-glow);
+      border-color: var(--glow);
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
     }
 
     textarea {
@@ -87,6 +109,7 @@
       text-align: left;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.82rem;
+      line-height: 1.5;
     }
 
     .btn-row {
@@ -100,13 +123,13 @@
     button {
       flex: 1;
       min-width: 110px;
-      padding: 9px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
-      border: none;
+      border: 1px solid transparent;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: 0.15s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -117,25 +140,25 @@
     button:active { transform: scale(0.97); }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
     }
-    .btn-primary:hover { opacity: 0.95; box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45); }
+    .btn-primary:hover { background: var(--accent-hover); }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(16, 48, 37, 0.7);
       color: var(--text);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--border);
     }
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(22, 66, 51, 0.9);
+      border-color: var(--glow);
     }
 
     .btn-sm {
-      padding: 5px 10px;
-      font-size: 0.75rem;
+      padding: 4px 9px;
+      font-size: 0.76rem;
       min-width: auto;
       flex: none;
     }
@@ -167,8 +190,8 @@
     }
 
     .word-chip {
-      background: var(--glass-card);
-      border: 1px solid var(--glass-border);
+      background: var(--inner);
+      border: 1px solid var(--border);
       padding: 10px 12px;
       border-radius: 10px;
       cursor: pointer;
@@ -180,9 +203,9 @@
     }
 
     .word-chip:hover {
-      border-color: var(--accent);
+      border-color: var(--glow);
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
     }
 
     .chip-star {
@@ -203,7 +226,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(6, 6, 9, 0.78);
+      background: rgba(3, 12, 8, 0.82);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 99999;
@@ -223,7 +246,7 @@
       background: var(--glass-modal);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
-      border: 1px solid var(--glass-border-focus);
+      border: 1px solid var(--glow);
       border-radius: 18px;
       width: 100%;
       max-width: 660px;
@@ -247,13 +270,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
     }
 
     .close-circle-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--glass-border);
+      background: rgba(16, 48, 37, 0.8);
+      border: 1px solid var(--border);
       color: #fff;
       width: 32px;
       height: 32px;
@@ -280,7 +303,7 @@
     .word-en-lg {
       font-size: 2.2rem;
       font-weight: 900;
-      color: #60a5fa;
+      color: #6ee7b7;
       direction: ltr;
       letter-spacing: 0.5px;
     }
@@ -301,10 +324,10 @@
     }
 
     .stress-strip {
-      background: rgba(0, 0, 0, 0.3);
+      background: var(--inner);
       padding: 10px 14px;
       border-radius: 10px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -319,20 +342,20 @@
       flex-wrap: wrap;
       gap: 6px;
       align-items: center;
-      background: rgba(0, 0, 0, 0.28);
-      border: 1px solid var(--glass-border);
+      background: rgba(6, 20, 15, 0.6);
+      border: 1px solid var(--border);
       padding: 6px 10px;
       border-radius: 10px;
     }
 
     .view-toggle-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
+      background: rgba(16, 48, 37, 0.7);
+      border: 1px solid var(--border);
       color: var(--muted);
       padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
       display: inline-flex;
@@ -343,20 +366,20 @@
     }
 
     .view-toggle-btn.active {
-      background: rgba(37, 99, 235, 0.22);
-      border-color: #60a5fa;
-      color: #93c5fd;
+      background: rgba(16, 185, 129, 0.25);
+      border-color: var(--glow);
+      color: #a7f3d0;
     }
 
     .view-toggle-btn:hover {
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: var(--glow);
       color: #fff;
     }
 
     /* كرت التحليل الصرفي المطور بالتلوين الدلالي */
     .morph-card {
-      background: rgba(139, 92, 246, 0.08);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.3);
       border-right: 4px solid var(--purple);
       padding: 12px 14px;
       border-radius: 10px;
@@ -453,8 +476,8 @@
 
     /* صندوق السياق الأصلي */
     .sentence-box {
-      background: rgba(37, 99, 235, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      background: rgba(6, 78, 59, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
       border-right: 4px solid var(--accent);
       padding: 12px 14px;
       border-radius: 10px;
@@ -473,7 +496,7 @@
 
     .sentence-ar {
       font-size: 0.9rem;
-      color: #93c5fd;
+      color: #a7f3d0;
       font-weight: 500;
       transition: filter 0.25s ease;
     }
@@ -508,7 +531,7 @@
       gap: 6px;
       flex-wrap: wrap;
       align-items: center;
-      border-top: 1px dashed var(--glass-border);
+      border-top: 1px dashed var(--border);
       padding-top: 10px;
     }
 
@@ -517,8 +540,8 @@
       bottom: 20px;
       right: 50%;
       transform: translateX(50%);
-      background: rgba(18, 18, 24, 0.95);
-      border: 1px solid var(--accent);
+      background: rgba(8, 34, 26, 0.95);
+      border: 1px solid var(--glow);
       color: #fff;
       padding: 8px 18px;
       border-radius: 20px;
@@ -542,9 +565,9 @@
         <p class="sub">استعراض الكلمات المعقدة بنظام البطاقات، التفكيك الصوتي، والجملة المشتقة منها دون أي نطق تلقائي.</p>
       </div>
       <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-        <button class="btn-secondary btn-sm" style="border-color: #818cf8; color: #c7d2fe; background: rgba(99, 102, 241, 0.15);" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات (IPA)</button>
-        <button class="btn-secondary btn-sm" style="border-color: #c084fc; color: #e9d5ff; background: rgba(168, 85, 247, 0.15);" onclick="toggleMorphGuideModal()">🔬 موسوعة السوابق واللواحق</button>
-        <button class="btn-secondary btn-sm" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
+        <button class="btn-secondary btn-sm" style="border-color: var(--glow); color: #a7f3d0;" onclick="togglePhoneticGuideModal()">📖 دليل نطق الأصوات (IPA)</button>
+        <button class="btn-secondary btn-sm" style="border-color: #a855f7; color: #e9d5ff; background: rgba(168, 85, 247, 0.15);" onclick="toggleMorphGuideModal()">🔬 موسوعة السوابق واللواحق</button>
+        <button class="btn-secondary btn-sm" style="border-color: #f59e0b; color: #fde68a;" onclick="toggleFavoritesOnly()">⭐ عرض المفضلة فقط (<span id="favCount">0</span>)</button>
       </div>
     </div>
 
@@ -574,7 +597,7 @@
           <div style="display: flex; align-items: center; gap: 4px;">
             <label style="font-size: 0.72rem; color: var(--muted);">السرعة:</label>
             <input type="range" id="modalRateSlider" min="0.5" max="1.5" step="0.05" value="0.85" style="width: 75px; accent-color: var(--accent); cursor: pointer;" oninput="updateRateDisplay()">
-            <span id="modalRateDisplay" style="font-size: 0.75rem; font-weight: bold; color: #60a5fa; min-width: 36px;">0.85x</span>
+            <span id="modalRateDisplay" style="font-size: 0.75rem; font-weight: bold; color: var(--glow); min-width: 36px;">0.85x</span>
           </div>
         </div>
         <div id="customDomainInputWrapper">
@@ -589,7 +612,7 @@
 
       <div style="display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap;">
         <button class="btn-primary" onclick="generateAndCopyPrompt()">📋 نسخ البرومبت المخصص</button>
-        <button class="btn-secondary" style="border-color: #8b5cf6; color: #c084fc;" onclick="openExtractPromptModal()">📑 برومبت استخراج من نص</button>
+        <button class="btn-secondary" style="border-color: var(--glow); color: #a7f3d0;" onclick="openExtractPromptModal()">📑 برومبت استخراج من نص</button>
       </div>
     </div>
   </div>
@@ -630,7 +653,7 @@
           <option value="2">مدة القراءة: دقيقتان (~280 كلمة)</option>
         </select>
 
-        <button class="btn-primary btn-sm" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none;" onclick="copyStoryPromptFromWords()">
+        <button class="btn-primary btn-sm" style="background: linear-gradient(135deg, #10b981, #059669); border: none;" onclick="copyStoryPromptFromWords()">
           ✨ برومبت إنشاء قطعة قرائية
         </button>
       </div>
@@ -640,8 +663,8 @@
     </div>
   </div>
 
-  <footer style="text-align: center; padding: 12px 0; font-size: 0.78rem; color: var(--muted);">
-    Built with <span style="color: #f59e0b;">⚡</span> By: <span style="color: #60a5fa; font-weight: 700;">Naif</span>
+  <footer style="text-align: center; padding: 14px 0 6px; font-size: 0.8rem; color: var(--muted);">
+    Built with <span style="color: #f59e0b;">⚡</span> By: <span style="color: var(--glow); font-weight: 800;">Naif</span>
   </footer>
 
 </div>
@@ -754,7 +777,7 @@
 
 <!-- نافذة منبثقة مستقلة للصق النص واستخراج الكلمات تظهر فوراً من الواجهة الرئيسية -->
 <div id="extractPromptModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100000; align-items: center; justify-content: center; padding: 14px;" onclick="if(event.target.id==='extractPromptModal')closeExtractPromptModal()">
-  <div style="background: rgba(20,20,28,0.96); border: 1px solid var(--accent); border-radius: 14px; width: 100%; max-width: 620px; padding: 18px; display: flex; flex-direction: column; gap: 10px; text-align: right; box-shadow: 0 20px 50px rgba(0,0,0,0.85);" onclick="event.stopPropagation()">
+  <div style="background: #08221a; border: 1px solid var(--glow); border-radius: 14px; width: 100%; max-width: 620px; padding: 18px; display: flex; flex-direction: column; gap: 10px; text-align: right; box-shadow: 0 20px 50px rgba(0,0,0,0.85);" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
       <h3 style="font-size: 0.95rem; font-weight: bold; color: #fff;">📑 توليد برومبت استخراج الكلمات المفخخة من نص</h3>
       <button onclick="closeExtractPromptModal()" style="background: transparent; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; min-width: auto;">✕</button>
@@ -771,11 +794,11 @@
 <div id="toast" class="toast-msg">تم النسخ بنجاح!</div>
 
 <!-- نافذة موسوعة السوابق واللواحق الصرفية الشاملة والموسعة (أكثر من 70 سابقة ولاحقة) -->
-<div id="morphGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 4, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='morphGuideModal')toggleMorphGuideModal()">
-  <div style="background: #14141a; border: 1px solid rgba(168, 85, 247, 0.45); border-radius: 18px; width: 100%; max-width: 900px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
+<div id="morphGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(2, 10, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='morphGuideModal')toggleMorphGuideModal()">
+  <div style="background: #08221a; border: 1px solid var(--glow); border-radius: 18px; width: 100%; max-width: 900px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
     
     <!-- شريط الرأس والتبويبات والبحث السريع -->
-    <div style="background: #1a1a24; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <div style="background: #0d3327; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div style="display: flex; align-items: center; gap: 8px;">
         <span style="font-size: 1.25rem;">🔬</span>
         <div>
@@ -1364,11 +1387,11 @@
 </div>
 
 <!-- نافذة موسوعة نطق الرموز الصوتية الكاملة والشاملة (44 صوتاً + الرموز الخاصة) -->
-<div id="phoneticGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 4, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='phoneticGuideModal')togglePhoneticGuideModal()">
-  <div style="background: #14141a; border: 1px solid rgba(99, 102, 241, 0.45); border-radius: 18px; width: 100%; max-width: 860px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
+<div id="phoneticGuideModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(2, 10, 7, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999; align-items: center; justify-content: center; padding: 12px;" onclick="if(event.target.id==='phoneticGuideModal')togglePhoneticGuideModal()">
+  <div style="background: #08221a; border: 1px solid var(--glow); border-radius: 18px; width: 100%; max-width: 860px; box-shadow: 0 30px 80px rgba(0,0,0,0.95); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; text-align: right;" onclick="event.stopPropagation()">
     
     <!-- شريط الرأس -->
-    <div style="background: #1a1a24; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <div style="background: #0d3327; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div style="display: flex; align-items: center; gap: 8px;">
         <span style="font-size: 1.25rem;">📖</span>
         <div>
