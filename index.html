@@ -1343,7 +1343,7 @@
     }
 
     const prompt = `${instructions}
-ممنوع استخدام أي تعليقات // داخل الكود. أخرج الإجابة فقط ككود JSON صالح بهذا الشكل:
+ممنوع استخدام أي تعليقات // داخل الكود، وممنوع وضع أسطر جديدة حقيقية (Enter) داخل النصوص (اكتب كل قيمة في سطر واحد أو استخدم \\n). أخرج الإجابة فقط ككود JSON صالح بهذا الشكل:
 
 {
   "score": 6,
@@ -1383,14 +1383,71 @@ ${text}
     }).catch(() => alert('تعذر النسخ.'));
   }
 
+  function safeParseEvaluationJson(rawText) {
+    let text = String(rawText || '');
+    let cleaned = '';
+    for (let i = 0; i < text.length; i++) {
+      const code = text.charCodeAt(i);
+      if (code === 160 || (code >= 8203 && code <= 8207) || (code >= 8234 && code <= 8238) || code === 65279) {
+        cleaned += ' ';
+      } else {
+        cleaned += text[i];
+      }
+    }
+
+    cleaned = cleaned.replace(/```json|```/gi, '').trim();
+    const startIdx = cleaned.indexOf('{');
+    const endIdx = cleaned.lastIndexOf('}');
+    if (startIdx !== -1 && endIdx !== -1) {
+      cleaned = cleaned.slice(startIdx, endIdx + 1);
+    }
+
+    try {
+      return JSON.parse(cleaned);
+    } catch (_) {
+      let inString = false;
+      let escaped = false;
+      let repaired = '';
+      const BS = String.fromCharCode(92);
+      const NL = String.fromCharCode(10);
+      const CR = String.fromCharCode(13);
+
+      for (let i = 0; i < cleaned.length; i++) {
+        const ch = cleaned[i];
+        if (escaped) {
+          repaired += ch;
+          escaped = false;
+          continue;
+        }
+        if (ch === BS) {
+          repaired += ch;
+          escaped = true;
+          continue;
+        }
+        if (ch === '"') {
+          inString = !inString;
+          repaired += ch;
+          continue;
+        }
+        if (inString && (ch === NL || ch === CR)) {
+          if (ch === CR && cleaned[i + 1] === NL) i++;
+          repaired += BS + 'n';
+          continue;
+        }
+        repaired += ch;
+      }
+
+      repaired = repaired.replace(/,[ \t\r\n]*([}\]])/g, '$1');
+      return JSON.parse(repaired);
+    }
+  }
+
   function applyJsonEvaluation() {
     let raw = document.getElementById('jsonInput').value.trim();
     if (!raw) return;
 
-    raw = raw.replace(/```json|```/g, '').replace(/\/\/.*$/gm, '');
-
     try {
-      const data = JSON.parse(raw);
+      const data = safeParseEvaluationJson(raw);
       
       const badge = document.getElementById('scoreDisplay');
       badge.textContent = `${data.score} / 10`;
