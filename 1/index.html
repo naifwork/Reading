@@ -1832,20 +1832,133 @@
   let favoritesSet = new Set(JSON.parse(localStorage.getItem('glass_vocab_favs') || '[]'));
   let availableVoices = [];
 
-  function initVoices() {
-    if (!('speechSynthesis' in window)) return;
-    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-    voices.sort((a, b) => {
-      const aNat = a.name.includes('Natural') || a.name.includes('Online');
-      const bNat = b.name.includes('Natural') || b.name.includes('Online');
-      return (bNat ? 1 : 0) - (aNat ? 1 : 0);
+  const CLOUD_VOICE_WORKER_URL = 'https://elapvoice.naif-work-xw.workers.dev';
+  let cloudVoiceAvailable = true;
+  let activeCloudAudio = null;
+
+  function appendCloudVoiceOptions(dropdown) {
+    if (!dropdown || !cloudVoiceAvailable) return;
+    const cloudVoices = [
+      { value: 'cloud:en-US', label: 'صوت بديل أمريكي' },
+      { value: 'cloud:en-GB', label: 'صوت بديل بريطاني' }
+    ];
+    cloudVoices.forEach(cv => {
+      if (!dropdown.querySelector(`option[value="${cv.value}"]`)) {
+        const opt = document.createElement('option');
+        opt.value = cv.value;
+        opt.textContent = cv.label;
+        dropdown.appendChild(opt);
+      }
     });
-    availableVoices = voices;
+  }
+
+  function removeCloudVoiceOptions() {
+    cloudVoiceAvailable = false;
+    ['modalVoiceSelect', 'cardInnerVoiceSelect'].forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const wasCloud = sel.value && sel.value.startsWith('cloud:');
+      sel.querySelectorAll('option[value^="cloud:"]').forEach(opt => opt.remove());
+      if (wasCloud && sel.options.length > 0) {
+        sel.selectedIndex = 0;
+      }
+    });
+  }
+
+  async function verifyCloudVoiceHealth() {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 2500);
+    try {
+      const res = await fetch(`${CLOUD_VOICE_WORKER_URL}?lang=en-US&text=hi`, {
+        method: 'GET',
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if (!res.ok) {
+        removeCloudVoiceOptions();
+      }
+    } catch (_) {
+      clearTimeout(timer);
+      removeCloudVoiceOptions();
+    }
+  }
+
+  function stopAllSpeechAudio() {
+    if (activeCloudAudio) {
+      try {
+        activeCloudAudio.onended = null;
+        activeCloudAudio.onerror = null;
+        activeCloudAudio.pause();
+        activeCloudAudio.currentTime = 0;
+      } catch (_) {}
+      activeCloudAudio = null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function speakVocabBrowserFallback(text, rate, selectedVoiceVal) {
+    if (!('speechSynthesis' in window)) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    const idx = parseInt(selectedVoiceVal, 10);
+    if (!isNaN(idx) && availableVoices[idx]) {
+      utter.voice = availableVoices[idx];
+    } else if (availableVoices.length > 0) {
+      utter.voice = availableVoices[0];
+    }
+    utter.rate = rate;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function playVocabCloudOrBrowserSpeech(text, rate, selectedVoiceVal) {
+    if (!text || !text.trim()) return;
+    stopAllSpeechAudio();
+    const voiceStr = String(selectedVoiceVal || '');
+
+    if (voiceStr.startsWith('cloud:')) {
+      const lang = voiceStr.replace('cloud:', '');
+      const url = `${CLOUD_VOICE_WORKER_URL}?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(text)}`;
+      const audio = new Audio(url);
+      audio.playbackRate = rate;
+      activeCloudAudio = audio;
+
+      let fellBack = false;
+      const fallbackToLocal = () => {
+        if (fellBack) return;
+        fellBack = true;
+        if (activeCloudAudio === audio) activeCloudAudio = null;
+        removeCloudVoiceOptions();
+        speakVocabBrowserFallback(text, rate, '');
+      };
+
+      audio.onended = () => {
+        if (activeCloudAudio === audio) activeCloudAudio = null;
+      };
+      audio.onerror = fallbackToLocal;
+      audio.play().catch(fallbackToLocal);
+      return;
+    }
+
+    speakVocabBrowserFallback(text, rate, voiceStr);
+  }
+
+  function initVoices() {
+    if ('speechSynthesis' in window) {
+      const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+      voices.sort((a, b) => {
+        const aNat = a.name.includes('Natural') || a.name.includes('Online');
+        const bNat = b.name.includes('Natural') || b.name.includes('Online');
+        return (bNat ? 1 : 0) - (aNat ? 1 : 0);
+      });
+      availableVoices = voices;
+    }
 
     // تعبئة قائمة الأصوات في الشريط العلوي وداخل البطاقة التعليمية معاً
     const populateVoiceDropdown = (elementId) => {
       const dropdown = document.getElementById(elementId);
       if (!dropdown) return;
+      const prevVal = dropdown.value;
       dropdown.innerHTML = '';
       availableVoices.forEach((v, idx) => {
         const opt = document.createElement('option');
@@ -1854,6 +1967,10 @@
         opt.textContent = `${isNat ? '⭐ ' : ''}${v.name} (${v.lang})`;
         dropdown.appendChild(opt);
       });
+      appendCloudVoiceOptions(dropdown);
+      if (prevVal && Array.from(dropdown.options).some(o => o.value === prevVal)) {
+        dropdown.value = prevVal;
+      }
     };
 
     populateVoiceDropdown('modalVoiceSelect');
@@ -1941,8 +2058,9 @@ ${text}
   }
   if ('speechSynthesis' in window) {
     window.speechSynthesis.onvoiceschanged = initVoices;
-    initVoices();
   }
+  initVoices();
+  verifyCloudVoiceHealth();
 
   function handleDomainChange() {
     const sel = document.getElementById('domainSelect').value;
@@ -2204,7 +2322,7 @@ ${text}
   function closeModal() {
     const overlay = document.getElementById('modalOverlay');
     overlay.classList.remove('active');
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    stopAllSpeechAudio();
   }
 
   function handleOverlayClick(e) {
@@ -2317,27 +2435,19 @@ ${text}
 
   // التحكم الصوتي اليدوي التام مع قراءة الناطق والسرعة من داخل البطاقة مباشرة
   function speakModalWord(overrideRate = null) {
-    if (!('speechSynthesis' in window) || !currentList[modalActiveIndex]) return;
-    window.speechSynthesis.cancel();
+    if (!currentList[modalActiveIndex]) return;
     const clean = currentList[modalActiveIndex].word.replace(/[^a-zA-Z]/g, '');
-    const utter = new SpeechSynthesisUtterance(clean);
 
     const innerVoiceSel = document.getElementById('cardInnerVoiceSelect');
     const mainVoiceSel = document.getElementById('modalVoiceSelect');
-    const selectedVoiceIdx = innerVoiceSel?.value || mainVoiceSel?.value;
-
-    if (selectedVoiceIdx && availableVoices[selectedVoiceIdx]) {
-      utter.voice = availableVoices[selectedVoiceIdx];
-    } else if (availableVoices.length > 0) {
-      utter.voice = availableVoices[0];
-    }
+    const selectedVoiceVal = innerVoiceSel?.value || mainVoiceSel?.value || '';
 
     const innerSlider = document.getElementById('cardInnerRateSlider');
     const mainSlider = document.getElementById('modalRateSlider');
     const currentRate = innerSlider ? parseFloat(innerSlider.value) : (mainSlider ? parseFloat(mainSlider.value) : 0.85);
+    const targetRate = overrideRate !== null ? overrideRate : currentRate;
 
-    utter.rate = overrideRate !== null ? overrideRate : currentRate;
-    window.speechSynthesis.speak(utter);
+    playVocabCloudOrBrowserSpeech(clean, targetRate, selectedVoiceVal);
   }
 
   function togglePhoneticGuideModal() {
@@ -2345,8 +2455,8 @@ ${text}
     if (!m) return;
     const isHidden = (m.style.display === 'none' || m.style.display === '');
     m.style.display = isHidden ? 'flex' : 'none';
-    if (!isHidden && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    if (!isHidden) {
+      stopAllSpeechAudio();
     }
   }
 
@@ -2355,8 +2465,8 @@ ${text}
     if (!m) return;
     const isHidden = (m.style.display === 'none' || m.style.display === '');
     m.style.display = isHidden ? 'flex' : 'none';
-    if (!isHidden && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    if (!isHidden) {
+      stopAllSpeechAudio();
     }
   }
 
@@ -2398,50 +2508,31 @@ ${text}
 
   // دالة متقدمة لنطق أمثلة الرموز الصوتية بالصوت والسرعة المختارة
   function speakPhoneticSample(...words) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
     const text = words.join(', ');
-    const utter = new SpeechSynthesisUtterance(text);
-
     const mainVoice = document.getElementById('modalVoiceSelect');
     const cardVoice = document.getElementById('cardInnerVoiceSelect');
-    const voiceIdx = cardVoice?.value || mainVoice?.value;
-
-    if (voiceIdx && availableVoices[voiceIdx]) {
-      utter.voice = availableVoices[voiceIdx];
-    } else if (availableVoices.length > 0) {
-      utter.voice = availableVoices[0];
-    }
+    const voiceVal = mainVoice?.value || cardVoice?.value || '';
 
     const slider = document.getElementById('modalRateSlider');
-    utter.rate = slider ? parseFloat(slider.value) : 0.85;
+    const rate = slider ? parseFloat(slider.value) : 0.85;
 
-    window.speechSynthesis.speak(utter);
+    playVocabCloudOrBrowserSpeech(text, rate, voiceVal);
   }
 
   // نطق الجملة السياقية بنفس الصوت المختار للناطق ونفس سرعة القراءة
   function speakModalSentence() {
-    if (!('speechSynthesis' in window) || !currentList[modalActiveIndex]) return;
-    window.speechSynthesis.cancel();
+    if (!currentList[modalActiveIndex]) return;
     const sentence = currentList[modalActiveIndex].sentence_en || currentList[modalActiveIndex].word;
-    const utter = new SpeechSynthesisUtterance(sentence);
 
     const innerVoiceSel = document.getElementById('cardInnerVoiceSelect');
     const mainVoiceSel = document.getElementById('modalVoiceSelect');
-    const selectedVoiceIdx = innerVoiceSel?.value || mainVoiceSel?.value;
-
-    if (selectedVoiceIdx && availableVoices[selectedVoiceIdx]) {
-      utter.voice = availableVoices[selectedVoiceIdx];
-    } else if (availableVoices.length > 0) {
-      utter.voice = availableVoices[0];
-    }
+    const selectedVoiceVal = innerVoiceSel?.value || mainVoiceSel?.value || '';
 
     const innerSlider = document.getElementById('cardInnerRateSlider');
     const mainSlider = document.getElementById('modalRateSlider');
     const currentRate = innerSlider ? parseFloat(innerSlider.value) : (mainSlider ? parseFloat(mainSlider.value) : 0.85);
 
-    utter.rate = currentRate;
-    window.speechSynthesis.speak(utter);
+    playVocabCloudOrBrowserSpeech(sentence, currentRate, selectedVoiceVal);
   }
 
   async function playHumanDictAudio(srcIdx) {
